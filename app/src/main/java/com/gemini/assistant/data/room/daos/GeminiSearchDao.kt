@@ -17,5 +17,5 @@ interface GeminiSearchDao {
     suspend fun deleteSearchEntity(searchEntity: SearchEntity)
 
     @Query("SELECT * FROM SearchEntity ORDER BY id DESC LIMIT 5")
-    fun retrieveLastFiveSearchQueries(): Flow<SearchEntity>
+    fun retrieveLastFiveSearchQueries(): Flow<List<SearchEntity>>
 }

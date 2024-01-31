@@ -1,4 +1,4 @@
-package com.gemini.assistant.utils.interner_connection
+package com.gemini.assistant.utils.internet_connection
 
 sealed class ConnectivityStatus {
     data class Available(val type: ConnectivityType): ConnectivityStatus()

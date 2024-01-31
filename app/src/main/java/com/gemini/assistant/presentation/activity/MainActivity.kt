@@ -1,4 +1,4 @@
-package com.gemini.assistant.presentation.activities
+package com.gemini.assistant.presentation.activity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

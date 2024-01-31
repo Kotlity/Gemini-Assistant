@@ -7,8 +7,7 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import com.gemini.assistant.domain.connection.ConnectionHandler
 import com.gemini.assistant.domain.connection.ConnectivityTypeHandler
-import com.gemini.assistant.utils.interner_connection.ConnectivityStatus
-import dagger.hilt.android.qualifiers.ApplicationContext
+import com.gemini.assistant.utils.internet_connection.ConnectivityStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -18,7 +17,7 @@ import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class InternetConnectionHandler @Inject constructor(
-    @ApplicationContext private val context: Context,
+    private val context: Context,
     private val connectivityTypeHandler: ConnectivityTypeHandler
 ): ConnectionHandler {
 
@@ -34,7 +33,7 @@ class InternetConnectionHandler @Inject constructor(
         .addTransportType(NetworkCapabilities.TRANSPORT_VPN)
         .build()
 
-    override fun isConnectedToTheInternet(): Flow<ConnectivityStatus> {
+    override fun connectivityStatusHandler(): Flow<ConnectivityStatus> {
         return callbackFlow {
 
             val networkCallback = object: ConnectivityManager.NetworkCallback() {
