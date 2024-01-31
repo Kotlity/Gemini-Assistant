@@ -1,9 +1,9 @@
 package com.gemini.assistant.domain.search
 
-import com.gemini.assistant.data.room.entities.SearchEntity
+import android.graphics.Bitmap
 import kotlinx.coroutines.flow.Flow
 
 interface SearchResponse {
 
-    fun retrieveSearchResponse(searchEntity: SearchEntity): Flow<SearchEntity>
+    fun search(searchText: String, searchImages: List<Bitmap>? = null): Flow<String>
 }
