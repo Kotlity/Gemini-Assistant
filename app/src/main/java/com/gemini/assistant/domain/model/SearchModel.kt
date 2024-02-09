@@ -1,19 +1,18 @@
-package com.gemini.assistant.domain.info
+package com.gemini.assistant.domain.model
 
-import android.graphics.Bitmap
 import com.gemini.assistant.data.room.entities.SearchEntity
 
-data class SearchInput(
+data class SearchModel(
     val id: Long,
     val search: String,
-    val bitmaps: List<Bitmap>? = null
+    val images: List<String>? = null
 ) {
 
     fun toSearchEntity(): SearchEntity {
         return SearchEntity(
             id = id,
             search = search,
-            bitmaps = bitmaps
+            images = images
         )
     }
 }

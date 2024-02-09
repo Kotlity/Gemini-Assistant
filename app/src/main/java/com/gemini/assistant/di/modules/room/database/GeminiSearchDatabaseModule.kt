@@ -2,7 +2,7 @@ package com.gemini.assistant.di.modules.room.database
 
 import android.content.Context
 import androidx.room.Room
-import com.gemini.assistant.data.room.converters.BitmapTypeConverter
+import com.gemini.assistant.data.room.converters.ImagesTypeConverter
 import com.gemini.assistant.data.room.database.GeminiSearchDatabase
 import com.gemini.assistant.utils.Constants.DATABASE_NAME
 import dagger.Module
@@ -24,7 +24,7 @@ object GeminiSearchDatabaseModule {
             klass = GeminiSearchDatabase::class.java,
             name = DATABASE_NAME
         )
-            .addTypeConverter(BitmapTypeConverter::class.java)
+            .addTypeConverter(ImagesTypeConverter::class.java)
             .fallbackToDestructiveMigration()
             .build()
     }

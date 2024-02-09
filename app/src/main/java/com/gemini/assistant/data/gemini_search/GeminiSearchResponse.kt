@@ -1,8 +1,9 @@
 package com.gemini.assistant.data.gemini_search
 
-import android.graphics.Bitmap
+import android.content.Context
 import com.gemini.assistant.domain.search.SearchResponse
 import com.gemini.assistant.utils.Constants.ERROR
+import com.gemini.assistant.utils.helpers.convertStringsToBitmaps
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
 import kotlinx.coroutines.Dispatchers
@@ -14,14 +15,20 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class GeminiSearchResponse @Inject constructor(private val geminiModel: GenerativeModel): SearchResponse {
+class GeminiSearchResponse @Inject constructor(private val applicationContext: Context, private val geminiModel: GenerativeModel): SearchResponse {
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun search(searchText: String, searchImages: List<Bitmap>?): Flow<String> {
+    override fun search(searchText: String, searchImages: List<String>): Flow<String> {
         val searchContent = content {
             text(searchText)
-            searchImages?.forEach { searchImage ->
-                image(searchImage)
+            if (searchImages.isNotEmpty()) {
+                val searchBitmaps = searchImages.convertStringsToBitmaps(applicationContext)
+                searchBitmaps.forEach { searchBitmap ->
+                    image(searchBitmap)
+                }
+//                searchImages.forEach { searchImage ->
+//                    image(searchImage)
+//                }
             }
         }
         return geminiModel.generateContentStream(searchContent)
