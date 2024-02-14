@@ -24,7 +24,6 @@ object GeminiSearchDatabaseModule {
             klass = GeminiSearchDatabase::class.java,
             name = DATABASE_NAME
         )
-            .addTypeConverter(ImagesTypeConverter::class.java)
             .fallbackToDestructiveMigration()
             .build()
     }

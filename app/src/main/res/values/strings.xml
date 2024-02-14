@@ -2,7 +2,6 @@
     <string name="app_name">Gemini Helper</string>
     <string name="wi_fi_internet_connection">Internet connection using Wi-Fi</string>
     <string name="mobile_internet_connection">Internet connection using mobile cellular</string>
-    <string name="vpn_internet_connection">Internet connection using VPN</string>
     <string name="undefined_internet_connection">Undefined Internet connection</string>
     <string name="lost_internet_connection">Internet connection has been lost</string>
     <string name="unavailable_internet_connection">Internet connection not available</string>

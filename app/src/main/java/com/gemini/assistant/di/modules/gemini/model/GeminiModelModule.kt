@@ -19,7 +19,7 @@ object GeminiModelModule {
     @ViewModelScoped
     fun provideGeminiModel(): GenerativeModel {
         return GenerativeModel(
-            modelName = "gemini-pro-vision",
+            modelName = "gemini-pro",
             apiKey = BuildConfig.apiKey,
             safetySettings = listOf(
                 SafetySetting(harmCategory = HarmCategory.HARASSMENT, threshold = BlockThreshold.ONLY_HIGH),

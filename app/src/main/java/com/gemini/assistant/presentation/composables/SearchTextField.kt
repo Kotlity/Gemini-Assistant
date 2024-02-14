@@ -1,32 +1,29 @@
 package com.gemini.assistant.presentation.composables
 
-import android.graphics.Rect
-import android.view.ViewTreeObserver
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gemini.assistant.R
 import com.gemini.assistant.presentation.theme.GeminiHelperTheme
-import com.gemini.assistant.utils.Constants._05f
+import com.gemini.assistant.utils.helpers.isKeyboardOpen
 import kotlinx.coroutines.delay
 
 @Composable
@@ -37,9 +34,11 @@ fun SearchTextField(
     textFieldEnabled: Boolean = true,
     textStyle: TextStyle = LocalTextStyle.current,
     placeHolderText: String = stringResource(id = R.string.searchTextFieldPlaceholder),
-    placeHolderTextAlpha: Float = _05f,
+    placeHolderTextStyle: TextStyle = LocalTextStyle.current,
     trailingIconEnabled: Boolean = false,
-    onSearchTrailingIconClick: () -> Unit
+    onSearchTrailingIconClick: () -> Unit,
+    shape: Shape = OutlinedTextFieldDefaults.shape,
+    colors: TextFieldColors = OutlinedTextFieldDefaults.colors()
 ) {
 
     OutlinedTextField(
@@ -51,7 +50,7 @@ fun SearchTextField(
         placeholder = {
             Text(
                 text = placeHolderText,
-                color = LocalTextStyle.current.color.copy(alpha = placeHolderTextAlpha)
+                style = placeHolderTextStyle
             )
         },
         trailingIcon = {
@@ -59,7 +58,9 @@ fun SearchTextField(
                 enabled = trailingIconEnabled,
                 onSearchTrailingIconClick = onSearchTrailingIconClick
             )
-        }
+        },
+        shape = shape,
+        colors = colors
     )
 }
 
@@ -114,31 +115,4 @@ fun TestPreview() {
             }
         )
     }
-}
-
-@Composable
-private fun isKeyboardOpen(): State<Boolean> {
-    val keyboardState = remember { mutableStateOf(false) }
-    val view = LocalView.current
-
-    DisposableEffect(view) {
-        val onGlobalListener = ViewTreeObserver.OnGlobalLayoutListener {
-            val rect = Rect()
-            view.getWindowVisibleDisplayFrame(rect)
-            val screenHeight = view.rootView.height
-            val keypadHeight = screenHeight - rect.bottom
-
-            keyboardState.value = if (keypadHeight > screenHeight * 0.15) true
-            else false
-
-        }
-
-        view.viewTreeObserver.addOnGlobalLayoutListener(onGlobalListener)
-
-        onDispose {
-            view.viewTreeObserver.removeOnGlobalLayoutListener(onGlobalListener)
-        }
-    }
-
-    return keyboardState
 }

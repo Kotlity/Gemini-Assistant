@@ -18,12 +18,16 @@ class ImagesTypeConverter {
 
     @TypeConverter
     fun toImages(image: String): List<String> {
-        return image.split(',').map { it.trim() }
+        return if (image.isNotBlank()) image.split(',').map { it.trim() }
+            else emptyList()
+
     }
 
     @TypeConverter
     fun toImage(images: List<String>): String {
-        return images.joinToString(",")
+        return if (images.isNotEmpty()) images.joinToString(",")
+            else ""
+
     }
 
 //    @TypeConverter

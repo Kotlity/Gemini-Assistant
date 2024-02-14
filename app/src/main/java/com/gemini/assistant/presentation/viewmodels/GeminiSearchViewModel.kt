@@ -67,6 +67,10 @@ class GeminiSearchViewModel @Inject constructor(private val appUseCases: AppUseC
         geminiSearchState = geminiSearchState.copy(isGeminiTyping = !geminiSearchState.isGeminiTyping)
     }
 
+    private fun clearSearchResponse() {
+        geminiSearchState = geminiSearchState.copy(searchResponse = "")
+    }
+
     private fun clearSearchInput() {
         geminiSearchState = geminiSearchState.copy(searchInput = "")
     }
@@ -84,11 +88,13 @@ class GeminiSearchViewModel @Inject constructor(private val appUseCases: AppUseC
         geminiSearchResponseJob = appUseCases.searchResponseUseCase(searchText = searchText, searchImages = searchImages)
             .onStart {
                 updateIsGeminiTypingValue()
+                clearSearchResponse()
                 clearSearchInput()
                 clearSearchImages()
             }
             .onEach { geminiSearchResponse ->
-                geminiSearchState = geminiSearchState.copy(searchResponse = geminiSearchResponse)
+                val concatenatedResponse = geminiSearchState.searchResponse.plus(geminiSearchResponse)
+                geminiSearchState = geminiSearchState.copy(searchResponse = concatenatedResponse)
             }
             .onCompletion {
                 updateIsGeminiTypingValue()

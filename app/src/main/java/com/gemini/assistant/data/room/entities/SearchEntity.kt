@@ -9,7 +9,7 @@ data class SearchEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val search: String,
-    val images: List<String>? = null
+    val images: List<String>
 ) {
 
     fun toSearchModel(): SearchModel {

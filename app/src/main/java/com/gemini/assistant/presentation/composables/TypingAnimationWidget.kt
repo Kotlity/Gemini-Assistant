@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -65,6 +66,7 @@ fun TypingAnimationWidget(
         Icon(
             modifier = Modifier.size(dimensionResource(id = R.dimen._35dp)),
             imageVector = Icons.Default.Create,
+            tint = MaterialTheme.colorScheme.secondary,
             contentDescription = null
         )
         repeat(dotCountInfiniteAnimation) {
@@ -76,6 +78,7 @@ fun TypingAnimationWidget(
                         scaleY = dotScaleInfiniteAnimation
                     },
                 imageVector = Icons.Default.Circle,
+                tint = MaterialTheme.colorScheme.secondary,
                 contentDescription = null
             )
         }

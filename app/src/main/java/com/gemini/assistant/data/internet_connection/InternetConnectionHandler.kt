@@ -30,7 +30,6 @@ class InternetConnectionHandler @Inject constructor(
         .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
         .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
         .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
-        .addTransportType(NetworkCapabilities.TRANSPORT_VPN)
         .build()
 
     override fun connectivityStatusHandler(): Flow<ConnectivityStatus> {

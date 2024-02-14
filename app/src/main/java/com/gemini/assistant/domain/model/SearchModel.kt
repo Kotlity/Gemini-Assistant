@@ -5,7 +5,7 @@ import com.gemini.assistant.data.room.entities.SearchEntity
 data class SearchModel(
     val id: Long,
     val search: String,
-    val images: List<String>? = null
+    val images: List<String>
 ) {
 
     fun toSearchEntity(): SearchEntity {

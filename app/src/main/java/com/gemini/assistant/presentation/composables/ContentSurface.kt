@@ -14,17 +14,15 @@ import com.gemini.assistant.R
 @Composable
 fun ContentSurface(
     modifier: Modifier = Modifier,
-    shapeDp: Dp = dimensionResource(id = R.dimen._35dp),
+    shapeDp: Dp = dimensionResource(id = R.dimen._20dp),
     shape: Shape = RoundedCornerShape(shapeDp),
-    color: Color = MaterialTheme.colorScheme.surface,
-    shadowElevation: Dp = dimensionResource(id = R.dimen._5dp),
+    color: Color = MaterialTheme.colorScheme.outlineVariant,
     content: @Composable () -> Unit
 ) {
     Surface(
         modifier = modifier,
         shape = shape,
         color = color,
-        shadowElevation = shadowElevation,
         content = content
     )
 }

@@ -11,7 +11,6 @@ class InternetConnectivityTypeHandler @Inject constructor(): ConnectivityTypeHan
         return when  {
             networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> ConnectivityType.Wi_Fi
             networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> ConnectivityType.Mobile
-            networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN) -> ConnectivityType.VPN
             else -> ConnectivityType.Undefined
         }
     }

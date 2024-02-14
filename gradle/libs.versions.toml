@@ -13,6 +13,7 @@ googleAndroidLibrariesMapsplatformSecretsGradlePlugin = "2.0.1"
 room = "2.6.1"
 kspVersion = "1.9.22-1.0.17"
 hiltVersion = "2.48.1"
+hiltNavigationComposeVersion = "1.1.0"
 kotlinxCoroutinesAndroid = "1.7.3"
 materialIconsExtended = "1.6.0"
 
@@ -29,6 +30,7 @@ androidx-room-runtime = { group = "androidx.room", name = "room-runtime", versio
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hiltVersion" }
+androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationComposeVersion" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hiltVersion" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
