@@ -8,6 +8,7 @@ import com.gemini.assistant.domain.database_operations.SearchDatabaseOperations
 import com.gemini.assistant.domain.search.SearchResponse
 import com.gemini.assistant.domain.usecases.AppUseCases
 import com.gemini.assistant.domain.usecases.connection.ConnectionHandlerUseCase
+import com.gemini.assistant.domain.usecases.search.ChatHistoryResponseUseCase
 import com.gemini.assistant.domain.usecases.search.SearchResponseUseCase
 import com.gemini.assistant.domain.usecases.search_operations.DeleteSearchUseCase
 import com.gemini.assistant.domain.usecases.search_operations.InsertSearchUseCase
@@ -30,7 +31,11 @@ object UseCasesModule {
 
     @Provides
     @ViewModelScoped
-    fun provideConnectionHandlerUseCase(connectionHandler: ConnectionHandler) = ConnectionHandlerUseCase(connectionHandler)
+    fun provideConnectionHandlerUseCase(connectionHandler: ConnectionHandler) = ConnectionHandlerUseCase(connectionHandler = connectionHandler)
+
+    @Provides
+    @ViewModelScoped
+    fun provideChatHistoryResponseUseCase(searchResponse: SearchResponse) = ChatHistoryResponseUseCase(searchResponse = searchResponse)
 
     @Provides
     @ViewModelScoped
@@ -52,12 +57,14 @@ object UseCasesModule {
     @ViewModelScoped
     fun provideAppUseCases(
         connectionHandlerUseCase: ConnectionHandlerUseCase,
+        chatHistoryResponseUseCase: ChatHistoryResponseUseCase,
         searchResponseUseCase: SearchResponseUseCase,
         insertSearchUseCase: InsertSearchUseCase,
         deleteSearchUseCase: DeleteSearchUseCase,
         retrieveFiveLastSearchQueriesUseCase: RetrieveFiveLastSearchQueriesUseCase
     ) = AppUseCases(
         connectionHandlerUseCase = connectionHandlerUseCase,
+        chatHistoryResponseUseCase = chatHistoryResponseUseCase,
         searchResponseUseCase = searchResponseUseCase,
         insertSearchUseCase = insertSearchUseCase,
         deleteSearchUseCase = deleteSearchUseCase,

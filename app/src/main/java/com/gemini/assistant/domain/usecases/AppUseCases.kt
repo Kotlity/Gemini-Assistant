@@ -1,6 +1,7 @@
 package com.gemini.assistant.domain.usecases
 
 import com.gemini.assistant.domain.usecases.connection.ConnectionHandlerUseCase
+import com.gemini.assistant.domain.usecases.search.ChatHistoryResponseUseCase
 import com.gemini.assistant.domain.usecases.search.SearchResponseUseCase
 import com.gemini.assistant.domain.usecases.search_operations.DeleteSearchUseCase
 import com.gemini.assistant.domain.usecases.search_operations.InsertSearchUseCase
@@ -8,6 +9,7 @@ import com.gemini.assistant.domain.usecases.search_operations.RetrieveFiveLastSe
 
 data class AppUseCases(
     val connectionHandlerUseCase: ConnectionHandlerUseCase,
+    val chatHistoryResponseUseCase: ChatHistoryResponseUseCase,
     val searchResponseUseCase: SearchResponseUseCase,
     val insertSearchUseCase: InsertSearchUseCase,
     val deleteSearchUseCase: DeleteSearchUseCase,

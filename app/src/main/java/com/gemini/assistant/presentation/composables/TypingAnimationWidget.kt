@@ -8,7 +8,6 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Circle
@@ -22,10 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.integerResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.gemini.assistant.R
-import com.gemini.assistant.presentation.theme.GeminiHelperTheme
 import com.gemini.assistant.utils.Constants._1_5f
 import com.gemini.assistant.utils.Constants._1f
 
@@ -82,13 +78,5 @@ fun TypingAnimationWidget(
                 contentDescription = null
             )
         }
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun TypingAnimationWidgetPreview() {
-    GeminiHelperTheme {
-        TypingAnimationWidget(modifier = Modifier.padding(20.dp))
     }
 }

@@ -1,5 +1,6 @@
 package com.gemini.assistant.presentation.viewmodels
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -26,7 +27,7 @@ class GeminiSearchViewModel @Inject constructor(private val appUseCases: AppUseC
     var geminiSearchState by mutableStateOf(GeminiSearchState())
         private set
 
-    private var geminiSearchResponseJob: Job? = null
+    private var geminiTypingResponseJob: Job? = null
 
     fun onEvent(geminiSearchEvent: GeminiSearchEvent) {
         when(geminiSearchEvent) {
@@ -59,6 +60,12 @@ class GeminiSearchViewModel @Inject constructor(private val appUseCases: AppUseC
         geminiSearchState = geminiSearchState.copy(searchImages = updatedSearchImages.toList())
     }
 
+    private fun updateChatHistoryResponseValue() {
+        val chatHistoryResponse = appUseCases.chatHistoryResponseUseCase()
+        geminiSearchState = geminiSearchState.copy(chatHistoryResponse = chatHistoryResponse)
+        Log.e("MyTag", "chat history response state: ${geminiSearchState.chatHistoryResponse}")
+    }
+
     private fun updateIsAlreadyStartConversation() {
         geminiSearchState = geminiSearchState.copy(isAlreadyStartConversation = true)
     }
@@ -67,8 +74,8 @@ class GeminiSearchViewModel @Inject constructor(private val appUseCases: AppUseC
         geminiSearchState = geminiSearchState.copy(isGeminiTyping = !geminiSearchState.isGeminiTyping)
     }
 
-    private fun clearSearchResponse() {
-        geminiSearchState = geminiSearchState.copy(searchResponse = "")
+    private fun clearTypingResponse() {
+        geminiSearchState = geminiSearchState.copy(typingResponse = "")
     }
 
     private fun clearSearchInput() {
@@ -84,20 +91,21 @@ class GeminiSearchViewModel @Inject constructor(private val appUseCases: AppUseC
 
         val searchText = geminiSearchState.searchInput
         val searchImages = geminiSearchState.searchImages
-        geminiSearchResponseJob?.cancel()
-        geminiSearchResponseJob = appUseCases.searchResponseUseCase(searchText = searchText, searchImages = searchImages)
+        geminiTypingResponseJob?.cancel()
+        geminiTypingResponseJob = appUseCases.searchResponseUseCase(searchText = searchText, searchImages = searchImages)
             .onStart {
                 updateIsGeminiTypingValue()
-                clearSearchResponse()
                 clearSearchInput()
                 clearSearchImages()
             }
             .onEach { geminiSearchResponse ->
-                val concatenatedResponse = geminiSearchState.searchResponse.plus(geminiSearchResponse)
-                geminiSearchState = geminiSearchState.copy(searchResponse = concatenatedResponse)
+                val concatenatedResponse = geminiSearchState.typingResponse.plus(geminiSearchResponse)
+                geminiSearchState = geminiSearchState.copy(typingResponse = concatenatedResponse)
             }
             .onCompletion {
+                clearTypingResponse()
                 updateIsGeminiTypingValue()
+                updateChatHistoryResponseValue()
             }
             .launchIn(viewModelScope)
     }

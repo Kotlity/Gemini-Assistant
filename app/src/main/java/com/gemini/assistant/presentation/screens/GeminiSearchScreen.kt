@@ -1,14 +1,12 @@
 package com.gemini.assistant.presentation.screens
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -25,11 +23,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gemini.assistant.R
+import com.gemini.assistant.presentation.composables.ChatLazyColumn
 import com.gemini.assistant.presentation.composables.ConnectionInfoWidget
 import com.gemini.assistant.presentation.composables.ContentSurface
-import com.gemini.assistant.presentation.composables.CustomText
+import com.gemini.assistant.presentation.composables.CustomDivider
 import com.gemini.assistant.presentation.composables.SearchTextField
-import com.gemini.assistant.presentation.composables.TypingAnimationWidget
 import com.gemini.assistant.presentation.composables.WelcomeWidget
 import com.gemini.assistant.presentation.events.GeminiSearchEvent
 import com.gemini.assistant.presentation.states.GeminiSearchState
@@ -49,10 +47,9 @@ fun GeminiSearchScreen(
     onGeminiSearchEvent: (GeminiSearchEvent) -> Unit
 ) {
 
-    val scrollState = rememberScrollState()
-
     val isAlreadyStartConversation = geminiSearchState.isAlreadyStartConversation
-    val geminiSearchResponse = geminiSearchState.searchResponse
+    val geminiChatHistoryResponse = geminiSearchState.chatHistoryResponse
+    val geminiTypingResponse = geminiSearchState.typingResponse
     val isGeminiTyping = geminiSearchState.isGeminiTyping
     val searchInput = geminiSearchState.searchInput
 
@@ -65,6 +62,13 @@ fun GeminiSearchScreen(
     val isKeyboardOpen by isKeyboardOpen()
 
     val focusManager = LocalFocusManager.current
+
+    val customTextModifier = Modifier.padding(
+        start = dimensionResource(id = R.dimen._7dp),
+        top = dimensionResource(id = R.dimen._5dp),
+        end = dimensionResource(id = R.dimen._5dp),
+        bottom = dimensionResource(id = R.dimen._5dp)
+    )
 
     LaunchedEffect(key1 = isKeyboardOpen) {
         if (!isKeyboardOpen && isSearchTextFieldFocused) focusManager.clearFocus()
@@ -80,48 +84,26 @@ fun GeminiSearchScreen(
                 .fillMaxWidth()
                 .weight(_08f)
                 .padding(dimensionResource(id = R.dimen._10dp))
-                .verticalScroll(state = scrollState)
         ) {
             if (!isAlreadyStartConversation) {
                 WelcomeWidget(modifier = Modifier.fillMaxSize())
             } else {
-                Column(
+                ChatLazyColumn(
                     modifier = Modifier
                         .padding(dimensionResource(id = R.dimen._5dp))
-                ) {
-                    CustomText(
-                        modifier = Modifier
-                            .padding(
-                                start = dimensionResource(id = R.dimen._7dp),
-                                top = dimensionResource(id = R.dimen._5dp),
-                                end = dimensionResource(id = R.dimen._5dp),
-                                bottom = dimensionResource(id = R.dimen._5dp),
-                            ),
-                        text = geminiSearchResponse,
-                        textStyle = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = _16sp,
-                            color = MaterialTheme.colorScheme.secondary
-                        )
-                    )
-                    if (isGeminiTyping) {
-                        TypingAnimationWidget(
-                            modifier = Modifier
-                                .padding(
-                                    start = dimensionResource(id = R.dimen._3dp),
-                                    bottom = dimensionResource(id = R.dimen._5dp)
-                                )
-                        )
-                    }
-                }
-
+                        .fillMaxWidth(),
+                    customTextModifier = customTextModifier,
+                    chatHistoryResponse = geminiChatHistoryResponse,
+                    typingResponse = geminiTypingResponse,
+                    isGeminiTyping = isGeminiTyping
+                )
             }
         }
-        Divider(
+        CustomDivider(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = dimensionResource(id = R.dimen._10dp)),
-            thickness = dimensionResource(id = R.dimen._3dp),
-            color = MaterialTheme.colorScheme.tertiaryContainer
+            thickness = dimensionResource(id = R.dimen._3dp)
         )
         ContentSurface(
             modifier = Modifier
@@ -191,7 +173,10 @@ fun GeminiSearchScreen(
 //@Composable
 //fun GeminiSearchScreenPreview() {
 //    GeminiHelperTheme {
-//        GeminiSearchScreen(geminiSearchState = GeminiSearchState()) {
+//        GeminiSearchScreen(
+//            geminiSearchState = GeminiSearchState(),
+//            connectivityStatus = MutableStateFlow(ConnectivityStatus.Available(ConnectivityType.Wi_Fi))
+//        ) {
 //
 //        }
 //    }
@@ -199,5 +184,6 @@ fun GeminiSearchScreen(
 
 
 
+@Preview(showBackground = true, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(showBackground = true, showSystemUi = true)
 annotation class PreviewAnnotation
