@@ -25,11 +25,12 @@ class GeminiSearchResponse @Inject constructor(
     }
 
     override val chatHistoryResponse: List<String>
-        get() = chat.history.filter { content ->
-            content.role == "model"
-        }
-            .map { modelContent ->
-                modelContent.parts.map { part ->
+        get() = chat.history
+//            .filter { content ->
+//            content.role == "model"
+//        }
+            .map { content ->
+                content.parts.map { part ->
                     part.asTextOrNull()
             }
         }

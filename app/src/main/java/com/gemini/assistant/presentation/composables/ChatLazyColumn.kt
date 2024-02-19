@@ -1,41 +1,48 @@
 package com.gemini.assistant.presentation.composables
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.text.AnnotatedString
 import com.gemini.assistant.R
-import com.gemini.assistant.utils.Constants
 
 @Composable
 fun ChatLazyColumn(
     modifier: Modifier = Modifier,
     customTextModifier: Modifier = Modifier,
+    textSearchInput: String = "",
     chatHistoryResponse: List<String> = emptyList(),
     typingResponse: String = "",
     isGeminiTyping: Boolean = false
 ) {
+
+    val clipboardManager = LocalClipboardManager.current
+
     LazyColumn(modifier = modifier) {
-        items(chatHistoryResponse) { response ->
-            ModelResponseSection(
-                modifier = customTextModifier
-                    .background(MaterialTheme.colorScheme.surfaceVariant),
-                response = response
+        items(chatHistoryResponse.size) { index ->
+            ChatSection(
+                textModifier = customTextModifier,
+                response = chatHistoryResponse,
+                index = index,
+                onTextCopied = { copiedText ->
+                    val annotatedString = AnnotatedString(copiedText)
+                    clipboardManager.setText(annotatedString)
+                }
             )
+        }
+        if (textSearchInput.isNotBlank()) {
+            item {
+                ChatUserSection(userInput = textSearchInput)
+            }
         }
         if (typingResponse.isNotBlank()) {
             item {
-                CustomText(
+                ChatTextResponse(
                     modifier = customTextModifier,
-                    text = typingResponse,
-                    textStyle = MaterialTheme.typography.bodyMedium.copy(
-                        fontSize = Constants._16sp,
-                        color = MaterialTheme.colorScheme.secondary
-                    )
+                    text = typingResponse
                 )
             }
         }

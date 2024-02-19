@@ -47,7 +47,8 @@ class GeminiSearchViewModel @Inject constructor(private val appUseCases: AppUseC
     }
 
     private fun onSearchInputUpdate(searchInput: String) {
-        geminiSearchState = geminiSearchState.copy(searchInput = searchInput)
+        val updatedSearchInputState = geminiSearchState.searchInputState.copy(textFieldSearchInput = searchInput)
+        geminiSearchState = geminiSearchState.copy(searchInputState = updatedSearchInputState)
     }
 
     private fun onSearchImagesUpdate(bitmaps: List<String>) {
@@ -78,8 +79,20 @@ class GeminiSearchViewModel @Inject constructor(private val appUseCases: AppUseC
         geminiSearchState = geminiSearchState.copy(typingResponse = "")
     }
 
-    private fun clearSearchInput() {
-        geminiSearchState = geminiSearchState.copy(searchInput = "")
+    private fun updateTextSearchInput() {
+        val textFieldSearchInput = geminiSearchState.searchInputState.textFieldSearchInput
+        val updatedSearchInputState = geminiSearchState.searchInputState.copy(textSearchInput = textFieldSearchInput)
+        geminiSearchState = geminiSearchState.copy(searchInputState = updatedSearchInputState)
+    }
+
+    private fun clearTextFieldSearchInput() {
+        val updatedSearchInputState = geminiSearchState.searchInputState.copy(textFieldSearchInput = "")
+        geminiSearchState = geminiSearchState.copy(searchInputState = updatedSearchInputState)
+    }
+
+    private fun clearTextSearchInput() {
+        val updatedSearchInputState = geminiSearchState.searchInputState.copy(textSearchInput = "")
+        geminiSearchState = geminiSearchState.copy(searchInputState = updatedSearchInputState)
     }
 
     private fun clearSearchImages() {
@@ -89,13 +102,14 @@ class GeminiSearchViewModel @Inject constructor(private val appUseCases: AppUseC
     private fun onSearchRequest() {
         if (!geminiSearchState.isAlreadyStartConversation) updateIsAlreadyStartConversation()
 
-        val searchText = geminiSearchState.searchInput
+        val textFieldSearchText = geminiSearchState.searchInputState.textFieldSearchInput
         val searchImages = geminiSearchState.searchImages
         geminiTypingResponseJob?.cancel()
-        geminiTypingResponseJob = appUseCases.searchResponseUseCase(searchText = searchText, searchImages = searchImages)
+        geminiTypingResponseJob = appUseCases.searchResponseUseCase(searchText = textFieldSearchText, searchImages = searchImages)
             .onStart {
                 updateIsGeminiTypingValue()
-                clearSearchInput()
+                updateTextSearchInput()
+                clearTextFieldSearchInput()
                 clearSearchImages()
             }
             .onEach { geminiSearchResponse ->
@@ -103,6 +117,7 @@ class GeminiSearchViewModel @Inject constructor(private val appUseCases: AppUseC
                 geminiSearchState = geminiSearchState.copy(typingResponse = concatenatedResponse)
             }
             .onCompletion {
+                clearTextSearchInput()
                 clearTypingResponse()
                 updateIsGeminiTypingValue()
                 updateChatHistoryResponseValue()

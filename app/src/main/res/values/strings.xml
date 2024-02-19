@@ -7,4 +7,6 @@
     <string name="unavailable_internet_connection">Internet connection not available</string>
     <string name="welcome">How can I help you today ?</string>
     <string name="searchTextFieldPlaceholder">Ask me something…</string>
+    <string name="geminiTitle">Gemini</string>
+    <string name="userTitle">You</string>
 </resources>

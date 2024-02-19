@@ -51,7 +51,8 @@ fun GeminiSearchScreen(
     val geminiChatHistoryResponse = geminiSearchState.chatHistoryResponse
     val geminiTypingResponse = geminiSearchState.typingResponse
     val isGeminiTyping = geminiSearchState.isGeminiTyping
-    val searchInput = geminiSearchState.searchInput
+    val textFieldSearchInput = geminiSearchState.searchInputState.textFieldSearchInput
+    val textSearchInput = geminiSearchState.searchInputState.textSearchInput
 
     val connectivityState by connectivityStatus.collectAsStateWithLifecycle()
 
@@ -93,6 +94,7 @@ fun GeminiSearchScreen(
                         .padding(dimensionResource(id = R.dimen._5dp))
                         .fillMaxWidth(),
                     customTextModifier = customTextModifier,
+                    textSearchInput = textSearchInput,
                     chatHistoryResponse = geminiChatHistoryResponse,
                     typingResponse = geminiTypingResponse,
                     isGeminiTyping = isGeminiTyping
@@ -125,7 +127,7 @@ fun GeminiSearchScreen(
                         .onFocusChanged { focusState ->
                             isSearchTextFieldFocused = focusState.isFocused
                         },
-                    searchText = searchInput,
+                    searchText = textFieldSearchInput,
                     onSearchTextChange = {
                         onGeminiSearchEvent(GeminiSearchEvent.OnSearchInputUpdate(it))
                     },
@@ -138,7 +140,7 @@ fun GeminiSearchScreen(
                         fontSize = _16sp,
                         fontWeight = FontWeight.Bold
                     ),
-                    trailingIconEnabled = searchInput.isNotBlank(),
+                    trailingIconEnabled = textFieldSearchInput.isNotBlank(),
                     onSearchTrailingIconClick = {
                         onGeminiSearchEvent(GeminiSearchEvent.OnSearchRequest)
                     },
