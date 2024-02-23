@@ -2,6 +2,7 @@ package com.gemini.assistant.presentation.composables
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
@@ -12,6 +13,7 @@ import com.gemini.assistant.R
 @Composable
 fun ChatLazyColumn(
     modifier: Modifier = Modifier,
+    lazyListState: LazyListState,
     customTextModifier: Modifier = Modifier,
     textSearchInput: String = "",
     chatHistoryResponse: List<String> = emptyList(),
@@ -21,7 +23,10 @@ fun ChatLazyColumn(
 
     val clipboardManager = LocalClipboardManager.current
 
-    LazyColumn(modifier = modifier) {
+    LazyColumn(
+        modifier = modifier,
+        state = lazyListState
+    ) {
         items(chatHistoryResponse.size) { index ->
             ChatSection(
                 textModifier = customTextModifier,

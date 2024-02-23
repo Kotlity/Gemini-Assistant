@@ -7,6 +7,10 @@ object Constants {
     const val DATABASE_NAME = "gemini_search.db"
     const val ERROR = "Something went wrong"
 
+    const val _500 = 500
+
+    const val _300L = 300L
+    const val _100L = 100L
     const val _5000L = 5000L
 
     val _14sp = 14.sp
@@ -19,6 +23,4 @@ object Constants {
     const val _08f = 0.8f
     const val _1f = 1f
     const val _1_5f = 1.5f
-
-    const val _500 = 500
 }

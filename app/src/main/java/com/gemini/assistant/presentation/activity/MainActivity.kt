@@ -18,10 +18,12 @@ class MainActivity : ComponentActivity() {
                 val geminiSearchViewModel = hiltViewModel<GeminiSearchViewModel>()
 
                 val geminiSearchState = geminiSearchViewModel.geminiSearchState
+                val isShowScrollDownButton = geminiSearchViewModel.isShowScrollDownButton
                 val geminiConnectivityStatus = geminiSearchViewModel.connectivityStatus
 
                 GeminiSearchScreen(
                     geminiSearchState = geminiSearchState,
+                    isShowScrollDownButton = isShowScrollDownButton,
                     connectivityStatus = geminiConnectivityStatus,
                     onGeminiSearchEvent = geminiSearchViewModel::onEvent)
             }
