@@ -3,10 +3,12 @@ package com.gemini.assistant.presentation.activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.gemini.assistant.presentation.screens.GeminiSearchScreen
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gemini.assistant.presentation.screens.GeminiChatSearchScreen
 import com.gemini.assistant.presentation.theme.GeminiHelperTheme
-import com.gemini.assistant.presentation.viewmodels.GeminiSearchViewModel
+import com.gemini.assistant.presentation.viewmodels.GeminiChatSearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -15,17 +17,19 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             GeminiHelperTheme {
-                val geminiSearchViewModel = hiltViewModel<GeminiSearchViewModel>()
+                val geminiChatSearchViewModel = hiltViewModel<GeminiChatSearchViewModel>()
 
-                val geminiSearchState = geminiSearchViewModel.geminiSearchState
-                val isShowScrollDownButton = geminiSearchViewModel.isShowScrollDownButton
-                val geminiConnectivityStatus = geminiSearchViewModel.connectivityStatus
+                val geminiChatSearchState = geminiChatSearchViewModel.geminiChatSearchState
+                val geminiConnectivityStatus by geminiChatSearchViewModel.connectivityStatus.collectAsStateWithLifecycle()
+                val geminiChatSearchHistory by geminiChatSearchViewModel.chatSearchHistory.collectAsStateWithLifecycle()
+                val isShowScrollDownButton = geminiChatSearchViewModel.isShowScrollDownButton
 
-                GeminiSearchScreen(
-                    geminiSearchState = geminiSearchState,
-                    isShowScrollDownButton = isShowScrollDownButton,
+                GeminiChatSearchScreen(
+                    geminiChatSearchState = geminiChatSearchState,
                     connectivityStatus = geminiConnectivityStatus,
-                    onGeminiSearchEvent = geminiSearchViewModel::onEvent)
+                    chatSearchHistory = geminiChatSearchHistory,
+                    isShowScrollDownButton = isShowScrollDownButton,
+                    onGeminiSearchEvent = geminiChatSearchViewModel::onEvent)
             }
         }
     }

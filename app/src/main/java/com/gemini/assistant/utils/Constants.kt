@@ -7,6 +7,8 @@ object Constants {
     const val DATABASE_NAME = "gemini_search.db"
     const val ERROR = "Something went wrong"
 
+    const val MAX_SEARCH_QUERIES = 5
+
     const val _500 = 500
 
     const val _300L = 300L

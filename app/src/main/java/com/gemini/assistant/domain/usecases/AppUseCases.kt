@@ -1,17 +1,19 @@
 package com.gemini.assistant.domain.usecases
 
 import com.gemini.assistant.domain.usecases.connection.ConnectionHandlerUseCase
-import com.gemini.assistant.domain.usecases.search.ChatHistoryResponseUseCase
-import com.gemini.assistant.domain.usecases.search.SearchResponseUseCase
-import com.gemini.assistant.domain.usecases.search_operations.DeleteSearchUseCase
-import com.gemini.assistant.domain.usecases.search_operations.InsertSearchUseCase
-import com.gemini.assistant.domain.usecases.search_operations.RetrieveFiveLastSearchQueriesUseCase
+import com.gemini.assistant.domain.usecases.chat_search.ChatHistoryResponseUseCase
+import com.gemini.assistant.domain.usecases.chat_search.ChatSearchResponseUseCase
+import com.gemini.assistant.domain.usecases.chat_search_operations.DeleteChatSearchOlderUseCase
+import com.gemini.assistant.domain.usecases.chat_search_operations.DeleteChatSearchUseCase
+import com.gemini.assistant.domain.usecases.chat_search_operations.InsertChatSearchUseCase
+import com.gemini.assistant.domain.usecases.chat_search_operations.RetrieveFiveLastChatSearchQueriesUseCase
 
 data class AppUseCases(
     val connectionHandlerUseCase: ConnectionHandlerUseCase,
     val chatHistoryResponseUseCase: ChatHistoryResponseUseCase,
-    val searchResponseUseCase: SearchResponseUseCase,
-    val insertSearchUseCase: InsertSearchUseCase,
-    val deleteSearchUseCase: DeleteSearchUseCase,
-    val retrieveFiveLastSearchQueriesUseCase: RetrieveFiveLastSearchQueriesUseCase
+    val chatSearchResponseUseCase: ChatSearchResponseUseCase,
+    val insertChatSearchUseCase: InsertChatSearchUseCase,
+    val deleteChatSearchUseCase: DeleteChatSearchUseCase,
+    val deleteChatSearchOlderUseCase: DeleteChatSearchOlderUseCase,
+    val retrieveFiveLastChatSearchQueriesUseCase: RetrieveFiveLastChatSearchQueriesUseCase
 )
