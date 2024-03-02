@@ -2,6 +2,7 @@ package com.gemini.assistant.presentation.composables
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -13,8 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import com.gemini.assistant.R
 import com.gemini.assistant.utils.Constants._18sp
@@ -25,7 +28,8 @@ fun TitleSection(
     horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(dimensionResource(id = R.dimen._2dp), Alignment.Start),
     isGeminiTitle: Boolean = true,
     title: String,
-    icon: Painter
+    bitmap: ImageBitmap? = null,
+    onIconClick: (() -> Unit)? = null
 ) {
     Row(
         modifier = modifier,
@@ -33,13 +37,14 @@ fun TitleSection(
         horizontalArrangement = horizontalArrangement
     ) {
         if (isGeminiTitle) {
-            TitleIcon(icon = icon)
+            TitleIcon()
             TitleText(title = title)
         } else {
             TitleText(title = title)
             TitleIcon(
-                icon = icon,
-                isGeminiIcon = false
+                bitmap = bitmap,
+                isGeminiIcon = false,
+                onIconClick = onIconClick
             )
         }
     }
@@ -47,15 +52,16 @@ fun TitleSection(
 
 @Composable
 private fun TitleIcon(
-    icon: Painter,
-    isGeminiIcon: Boolean = true
+    bitmap: ImageBitmap? = null,
+    isGeminiIcon: Boolean = true,
+    onIconClick: (() -> Unit)? = null
 ) {
 
     if (isGeminiIcon) {
         Icon(
             modifier = Modifier
                 .size(dimensionResource(id = R.dimen._25dp)),
-            painter = icon,
+            painter = painterResource(id = R.drawable.gemini_logo),
             tint = MaterialTheme.colorScheme.onBackground,
             contentDescription = null
         )
@@ -65,19 +71,30 @@ private fun TitleIcon(
             color = MaterialTheme.colorScheme.onBackground
         )
 
-        Icon(
-            modifier = Modifier
-                .size(dimensionResource(id = R.dimen._25dp))
-                .border(
-                    border = borderStroke,
-                    shape = CircleShape
-                )
-                .padding(dimensionResource(id = R.dimen._2dp))
-                .clip(CircleShape),
-            painter = icon,
-            tint = MaterialTheme.colorScheme.onBackground,
-            contentDescription = null
-        )
+        val userIconModifier = Modifier
+            .size(dimensionResource(id = R.dimen._25dp))
+            .border(
+                border = borderStroke,
+                shape = CircleShape
+            )
+            .padding(dimensionResource(id = R.dimen._2dp))
+            .clip(CircleShape)
+            .clickable { onIconClick?.let { it() } }
+
+        if (bitmap == null) {
+            Icon(
+                modifier = userIconModifier,
+                painter = painterResource(id = R.drawable.user_default_logo),
+                tint = MaterialTheme.colorScheme.onBackground,
+                contentDescription = null
+            )
+        } else {
+            Icon(
+                modifier = userIconModifier,
+                bitmap = bitmap,
+                contentDescription = null
+            )
+        }
     }
 }
 

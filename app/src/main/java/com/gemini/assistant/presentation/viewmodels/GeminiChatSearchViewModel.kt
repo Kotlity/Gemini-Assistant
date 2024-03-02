@@ -1,5 +1,6 @@
 package com.gemini.assistant.presentation.viewmodels
 
+import android.graphics.Bitmap
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,11 +47,20 @@ class GeminiChatSearchViewModel @Inject constructor(private val appUseCases: App
             is GeminiSearchEvent.IsShowScrollDownButtonUpdate -> {
                 isShowScrollDownButtonUpdate(geminiSearchEvent.isShowScrollDownButton)
             }
+            is GeminiSearchEvent.OnUserIconBitmapUpdate -> {
+                onUserIconBitmapUpdate(geminiSearchEvent.newUserIconBitmap)
+            }
+            is GeminiSearchEvent.OnPermissionResult -> {
+                onPermissionResult(geminiSearchEvent.permission, geminiSearchEvent.isGranted)
+            }
             GeminiSearchEvent.OnSearchRequest -> {
                 onSearchRequest()
             }
             GeminiSearchEvent.OnDeleteChatSearchOlder -> {
                 onDeleteChatSearchOlder()
+            }
+            GeminiSearchEvent.OnDismissPermissionDialog -> {
+                onDismissPermissionDialog()
             }
         }
     }
@@ -67,6 +77,18 @@ class GeminiChatSearchViewModel @Inject constructor(private val appUseCases: App
 
     private fun isShowScrollDownButtonUpdate(isShowScrollDownButton: Boolean) {
         this.isShowScrollDownButton = isShowScrollDownButton
+    }
+
+    private fun onUserIconBitmapUpdate(newUserIconBitmap: Bitmap) {
+        geminiChatSearchState = geminiChatSearchState.copy(userIconBitmap = newUserIconBitmap)
+    }
+
+    private fun onPermissionResult(permission: String, isGranted: Boolean) {
+        if (!isGranted && !geminiChatSearchState.visiblePermissionDialogQueue.contains(permission)) {
+            val updatedVisiblePermissionDialogQueue = geminiChatSearchState.visiblePermissionDialogQueue.toMutableList()
+            updatedVisiblePermissionDialogQueue.add(permission)
+            geminiChatSearchState = geminiChatSearchState.copy(visiblePermissionDialogQueue = updatedVisiblePermissionDialogQueue.toList())
+        }
     }
 
     private fun updateChatHistoryResponseValue() {
@@ -107,6 +129,12 @@ class GeminiChatSearchViewModel @Inject constructor(private val appUseCases: App
         }
     }
 
+    private fun onDismissPermissionDialog() {
+        val updatedVisiblePermissionDialogQueue = geminiChatSearchState.visiblePermissionDialogQueue.toMutableList()
+        updatedVisiblePermissionDialogQueue.removeFirst()
+        geminiChatSearchState = geminiChatSearchState.copy(visiblePermissionDialogQueue = updatedVisiblePermissionDialogQueue.toList())
+    }
+
     private fun onSearchRequest() {
         if (!geminiChatSearchState.isAlreadyStartConversation) updateIsAlreadyStartConversation()
 
@@ -123,7 +151,7 @@ class GeminiChatSearchViewModel @Inject constructor(private val appUseCases: App
                 updateTypingResponse(geminiSearchResponse)
             }
             .onCompletion {
-                onSearchInputUpdate()
+                updateTextSearchInput()
                 clearTypingResponse()
                 updateIsGeminiTypingValue()
                 updateChatHistoryResponseValue()

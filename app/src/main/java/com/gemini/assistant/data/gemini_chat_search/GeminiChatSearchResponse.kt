@@ -36,7 +36,7 @@ class GeminiChatSearchResponse @Inject constructor(
         get() = retrieveChatHistoryResponse()
 
     override fun chatSearch(searchText: String): Flow<String> {
-        val searchContent = content {
+        val searchContent = content("user") {
             text(searchText)
         }
 

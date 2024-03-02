@@ -17,14 +17,12 @@ fun ChatSearchHistoryLazyColumn(
     chatSearchHistory: List<ChatSearchModel>,
     contentPadding: PaddingValues = PaddingValues(dimensionResource(id = R.dimen._2dp)),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(dimensionResource(id = R.dimen._2dp), Alignment.CenterVertically),
-    horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
     onItemClick: (String) -> Unit
 ) {
     LazyColumn(
         modifier = modifier,
         contentPadding = contentPadding,
-        verticalArrangement = verticalArrangement,
-        horizontalAlignment = horizontalAlignment
+        verticalArrangement = verticalArrangement
     ) {
         itemsIndexed(chatSearchHistory) { index, searchHistoryItem ->
             ChatSearchHistoryItem(
