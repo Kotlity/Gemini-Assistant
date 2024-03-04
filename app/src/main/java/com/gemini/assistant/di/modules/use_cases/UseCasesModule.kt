@@ -3,9 +3,11 @@ package com.gemini.assistant.di.modules.use_cases
 import com.gemini.assistant.di.modules.connection.ConnectionModule
 import com.gemini.assistant.di.modules.gemini.chat_search.GeminiChatSearchResponseModule
 import com.gemini.assistant.di.modules.chat_search_operations.GeminiChatSearchDatabaseOperationsModule
+import com.gemini.assistant.di.modules.user_photo_operations.UserPhotoDatabaseOperationsModule
 import com.gemini.assistant.domain.connection.ConnectionHandler
-import com.gemini.assistant.domain.database_operations.ChatSearchDatabaseOperations
+import com.gemini.assistant.domain.database_operations.chat_search.ChatSearchDatabaseOperations
 import com.gemini.assistant.domain.chat_search.ChatSearchResponse
+import com.gemini.assistant.domain.database_operations.user_photo.UserPhotoDatabaseOperations
 import com.gemini.assistant.domain.usecases.AppUseCases
 import com.gemini.assistant.domain.usecases.connection.ConnectionHandlerUseCase
 import com.gemini.assistant.domain.usecases.chat_search.ChatHistoryResponseUseCase
@@ -14,6 +16,8 @@ import com.gemini.assistant.domain.usecases.chat_search_operations.DeleteChatSea
 import com.gemini.assistant.domain.usecases.chat_search_operations.DeleteChatSearchUseCase
 import com.gemini.assistant.domain.usecases.chat_search_operations.InsertChatSearchUseCase
 import com.gemini.assistant.domain.usecases.chat_search_operations.RetrieveFiveLastChatSearchQueriesUseCase
+import com.gemini.assistant.domain.usecases.user_photo_operations.InsertUserPhotoUseCase
+import com.gemini.assistant.domain.usecases.user_photo_operations.RetrieveUserPhotoPathUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,7 +28,8 @@ import dagger.hilt.android.scopes.ViewModelScoped
     includes = [
         ConnectionModule::class,
         GeminiChatSearchResponseModule::class,
-        GeminiChatSearchDatabaseOperationsModule::class
+        GeminiChatSearchDatabaseOperationsModule::class,
+        UserPhotoDatabaseOperationsModule::class
     ]
 )
 @InstallIn(ViewModelComponent::class)
@@ -60,6 +65,14 @@ object UseCasesModule {
 
     @Provides
     @ViewModelScoped
+    fun provideInsertUserPhotoUseCase(userPhotoDatabaseOperations: UserPhotoDatabaseOperations) = InsertUserPhotoUseCase(userPhotoDatabaseOperations = userPhotoDatabaseOperations)
+
+    @Provides
+    @ViewModelScoped
+    fun provideRetrieveUserPhotoPathUseCase(userPhotoDatabaseOperations: UserPhotoDatabaseOperations) = RetrieveUserPhotoPathUseCase(userPhotoDatabaseOperations = userPhotoDatabaseOperations)
+
+    @Provides
+    @ViewModelScoped
     fun provideAppUseCases(
         connectionHandlerUseCase: ConnectionHandlerUseCase,
         chatHistoryResponseUseCase: ChatHistoryResponseUseCase,
@@ -67,7 +80,9 @@ object UseCasesModule {
         insertChatSearchUseCase: InsertChatSearchUseCase,
         deleteChatSearchUseCase: DeleteChatSearchUseCase,
         deleteChatSearchOlderUseCase: DeleteChatSearchOlderUseCase,
-        retrieveFiveLastChatSearchQueriesUseCase: RetrieveFiveLastChatSearchQueriesUseCase
+        retrieveFiveLastChatSearchQueriesUseCase: RetrieveFiveLastChatSearchQueriesUseCase,
+        insertUserPhotoUseCase: InsertUserPhotoUseCase,
+        retrieveUserPhotoPathUseCase: RetrieveUserPhotoPathUseCase
     ) = AppUseCases(
         connectionHandlerUseCase = connectionHandlerUseCase,
         chatHistoryResponseUseCase = chatHistoryResponseUseCase,
@@ -75,6 +90,8 @@ object UseCasesModule {
         insertChatSearchUseCase = insertChatSearchUseCase,
         deleteChatSearchUseCase = deleteChatSearchUseCase,
         deleteChatSearchOlderUseCase = deleteChatSearchOlderUseCase,
-        retrieveFiveLastChatSearchQueriesUseCase = retrieveFiveLastChatSearchQueriesUseCase
+        retrieveFiveLastChatSearchQueriesUseCase = retrieveFiveLastChatSearchQueriesUseCase,
+        insertUserPhotoUseCase = insertUserPhotoUseCase,
+        retrieveUserPhotoPathUseCase = retrieveUserPhotoPathUseCase
     )
 }

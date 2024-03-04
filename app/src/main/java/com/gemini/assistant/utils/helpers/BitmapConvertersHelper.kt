@@ -35,3 +35,17 @@ fun Uri.parseUriToBitmap(context: Context): Bitmap? {
         null
     }
 }
+
+fun Uri.parseUriToString(): String {
+    return this.toString()
+}
+
+fun String.parseStringToBitmap(context: Context): Bitmap? {
+    return try {
+        val uri = Uri.parse(this)
+        uri.parseUriToBitmap(context)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }
+}

@@ -5,7 +5,7 @@ import com.gemini.assistant.data.gemini_chat_search_database_operations.GeminiCh
 import com.gemini.assistant.data.room.daos.GeminiChatSearchDao
 import com.gemini.assistant.di.modules.dispatcher.AppDispatcherModule
 import com.gemini.assistant.di.modules.room.daos.GeminiChatSearchDaoModule
-import com.gemini.assistant.domain.database_operations.ChatSearchDatabaseOperations
+import com.gemini.assistant.domain.database_operations.chat_search.ChatSearchDatabaseOperations
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

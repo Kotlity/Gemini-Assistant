@@ -7,6 +7,8 @@ import com.gemini.assistant.domain.usecases.chat_search_operations.DeleteChatSea
 import com.gemini.assistant.domain.usecases.chat_search_operations.DeleteChatSearchUseCase
 import com.gemini.assistant.domain.usecases.chat_search_operations.InsertChatSearchUseCase
 import com.gemini.assistant.domain.usecases.chat_search_operations.RetrieveFiveLastChatSearchQueriesUseCase
+import com.gemini.assistant.domain.usecases.user_photo_operations.InsertUserPhotoUseCase
+import com.gemini.assistant.domain.usecases.user_photo_operations.RetrieveUserPhotoPathUseCase
 
 data class AppUseCases(
     val connectionHandlerUseCase: ConnectionHandlerUseCase,
@@ -15,5 +17,7 @@ data class AppUseCases(
     val insertChatSearchUseCase: InsertChatSearchUseCase,
     val deleteChatSearchUseCase: DeleteChatSearchUseCase,
     val deleteChatSearchOlderUseCase: DeleteChatSearchOlderUseCase,
-    val retrieveFiveLastChatSearchQueriesUseCase: RetrieveFiveLastChatSearchQueriesUseCase
+    val retrieveFiveLastChatSearchQueriesUseCase: RetrieveFiveLastChatSearchQueriesUseCase,
+    val insertUserPhotoUseCase: InsertUserPhotoUseCase,
+    val retrieveUserPhotoPathUseCase: RetrieveUserPhotoPathUseCase
 )

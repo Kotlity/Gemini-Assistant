@@ -22,12 +22,14 @@ class MainActivity : ComponentActivity() {
                 val geminiChatSearchState = geminiChatSearchViewModel.geminiChatSearchState
                 val geminiConnectivityStatus by geminiChatSearchViewModel.connectivityStatus.collectAsStateWithLifecycle()
                 val geminiChatSearchHistory by geminiChatSearchViewModel.chatSearchHistory.collectAsStateWithLifecycle()
+                val userPhotoPathFromDB by geminiChatSearchViewModel.userPhotoPath.collectAsStateWithLifecycle()
                 val isShowScrollDownButton = geminiChatSearchViewModel.isShowScrollDownButton
 
                 GeminiChatSearchScreen(
                     geminiChatSearchState = geminiChatSearchState,
                     connectivityStatus = geminiConnectivityStatus,
                     chatSearchHistory = geminiChatSearchHistory,
+                    userPhotoPathFromDB = userPhotoPathFromDB,
                     isShowScrollDownButton = isShowScrollDownButton,
                     onGeminiSearchEvent = geminiChatSearchViewModel::onEvent)
             }

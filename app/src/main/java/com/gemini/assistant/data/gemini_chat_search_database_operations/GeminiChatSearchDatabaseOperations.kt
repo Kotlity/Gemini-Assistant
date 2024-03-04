@@ -3,7 +3,7 @@ package com.gemini.assistant.data.gemini_chat_search_database_operations
 import com.gemini.assistant.data.dispatchers.AppDispatcher
 import com.gemini.assistant.data.room.daos.GeminiChatSearchDao
 import com.gemini.assistant.data.room.entities.ChatSearchEntity
-import com.gemini.assistant.domain.database_operations.ChatSearchDatabaseOperations
+import com.gemini.assistant.domain.database_operations.chat_search.ChatSearchDatabaseOperations
 import com.gemini.assistant.utils.helpers.onCoroutineContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn

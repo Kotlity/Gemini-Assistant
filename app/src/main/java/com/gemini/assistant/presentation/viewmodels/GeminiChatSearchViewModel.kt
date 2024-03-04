@@ -1,6 +1,5 @@
 package com.gemini.assistant.presentation.viewmodels
 
-import android.graphics.Bitmap
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -8,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gemini.assistant.domain.model.ChatSearchModel
+import com.gemini.assistant.domain.model.UserPhotoModel
 import com.gemini.assistant.domain.usecases.AppUseCases
 import com.gemini.assistant.presentation.events.GeminiSearchEvent
 import com.gemini.assistant.presentation.states.GeminiChatSearchState
@@ -29,6 +29,8 @@ class GeminiChatSearchViewModel @Inject constructor(private val appUseCases: App
 
     val chatSearchHistory = appUseCases.retrieveFiveLastChatSearchQueriesUseCase().toHotFlow(coroutineScope = viewModelScope, initialValue = emptyList())
 
+    val userPhotoPath = appUseCases.retrieveUserPhotoPathUseCase().toHotFlow(coroutineScope = viewModelScope, initialValue = null)
+
     var geminiChatSearchState by mutableStateOf(GeminiChatSearchState())
         private set
 
@@ -47,11 +49,11 @@ class GeminiChatSearchViewModel @Inject constructor(private val appUseCases: App
             is GeminiSearchEvent.IsShowScrollDownButtonUpdate -> {
                 isShowScrollDownButtonUpdate(geminiSearchEvent.isShowScrollDownButton)
             }
-            is GeminiSearchEvent.OnUserIconBitmapUpdate -> {
-                onUserIconBitmapUpdate(geminiSearchEvent.newUserIconBitmap)
-            }
             is GeminiSearchEvent.OnPermissionResult -> {
                 onPermissionResult(geminiSearchEvent.permission, geminiSearchEvent.isGranted)
+            }
+            is GeminiSearchEvent.OnInsertUserPhoto -> {
+                onInsertUserPhoto(geminiSearchEvent.userPhotoPath)
             }
             GeminiSearchEvent.OnSearchRequest -> {
                 onSearchRequest()
@@ -79,15 +81,18 @@ class GeminiChatSearchViewModel @Inject constructor(private val appUseCases: App
         this.isShowScrollDownButton = isShowScrollDownButton
     }
 
-    private fun onUserIconBitmapUpdate(newUserIconBitmap: Bitmap) {
-        geminiChatSearchState = geminiChatSearchState.copy(userIconBitmap = newUserIconBitmap)
-    }
-
     private fun onPermissionResult(permission: String, isGranted: Boolean) {
         if (!isGranted && !geminiChatSearchState.visiblePermissionDialogQueue.contains(permission)) {
             val updatedVisiblePermissionDialogQueue = geminiChatSearchState.visiblePermissionDialogQueue.toMutableList()
             updatedVisiblePermissionDialogQueue.add(permission)
             geminiChatSearchState = geminiChatSearchState.copy(visiblePermissionDialogQueue = updatedVisiblePermissionDialogQueue.toList())
+        }
+    }
+
+    private fun onInsertUserPhoto(userPhotoPath: String) {
+        viewModelScope.launch {
+            val userPhotoModel = UserPhotoModel(userPhotoPath = userPhotoPath)
+            appUseCases.insertUserPhotoUseCase(userPhotoModel = userPhotoModel)
         }
     }
 

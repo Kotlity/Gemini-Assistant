@@ -13,6 +13,7 @@ suspend inline fun <T> onCoroutineContext(
     return try {
         withContext(coroutineContext, block)
     } catch (io: IOException) {
+        io.printStackTrace()
         null
     }
 }

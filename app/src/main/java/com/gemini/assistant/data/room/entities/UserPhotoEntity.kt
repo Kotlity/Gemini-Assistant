@@ -4,8 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class ChatSearchEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
-    val search: String
+data class UserPhotoEntity(
+    @PrimaryKey val id: Int = 0,
+    val userPhotoPath: String
 )

@@ -9,7 +9,8 @@ import com.gemini.assistant.R
 
 interface PermissionProvider {
     fun permissionDescription(context: Context, isPermissionPermanentlyDeclined: Boolean): String
-    fun permissionIcon(): ImageVector = Icons.Default.Image
+    val permissionIcon: ImageVector
+        get() = Icons.Default.Image
 }
 
 class MediaVisualUserSelectedPermissionProvider: PermissionProvider {
@@ -35,7 +36,5 @@ class ExternalStoragePermissionProvider: PermissionProvider {
         else context.getString(R.string.external_storage_rationale_permission)
     }
 
-    override fun permissionIcon(): ImageVector {
-        return Icons.Default.Storage
-    }
+    override val permissionIcon: ImageVector = Icons.Default.Storage
 }

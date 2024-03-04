@@ -70,7 +70,8 @@ import com.gemini.assistant.utils.helpers.permission.MediaImagesPermissionProvid
 import com.gemini.assistant.utils.helpers.permission.MediaVisualUserSelectedPermissionProvider
 import com.gemini.assistant.utils.helpers.animateScrollToEnd
 import com.gemini.assistant.utils.helpers.isKeyboardOpen
-import com.gemini.assistant.utils.helpers.parseUriToBitmap
+import com.gemini.assistant.utils.helpers.parseStringToBitmap
+import com.gemini.assistant.utils.helpers.parseUriToString
 import com.gemini.assistant.utils.helpers.permission.goToAppSettings
 import com.gemini.assistant.utils.helpers.permission.isShouldShowRequestPermissionRationale
 import com.gemini.assistant.utils.helpers.scrollToEnd
@@ -94,13 +95,13 @@ fun GeminiChatSearchScreen(
     geminiChatSearchState: GeminiChatSearchState,
     connectivityStatus: ConnectivityStatus,
     chatSearchHistory: List<ChatSearchModel>,
+    userPhotoPathFromDB: String?,
     isShowScrollDownButton: Boolean,
     onGeminiSearchEvent: (GeminiSearchEvent) -> Unit
 ) {
 
     val isAlreadyStartConversation = geminiChatSearchState.isAlreadyStartConversation
     val geminiChatHistoryResponse = geminiChatSearchState.chatHistoryResponse
-    val userIconBitmap = geminiChatSearchState.userIconBitmap
     val geminiTypingResponse = geminiChatSearchState.typingResponse
     val isGeminiTyping = geminiChatSearchState.isGeminiTyping
     val textFieldSearchInput = geminiChatSearchState.chatSearchInputState.textFieldSearchInput
@@ -125,11 +126,12 @@ fun GeminiChatSearchScreen(
 
     val context = LocalContext.current
 
+    val userPhotoBitmap = userPhotoPathFromDB?.parseStringToBitmap(context)?.asImageBitmap()
+
     val galleryPickerLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.PickVisualMedia()) { uri ->
         uri?.let {
-            it.parseUriToBitmap(context)?.let { bitmap ->
-                onGeminiSearchEvent(GeminiSearchEvent.OnUserIconBitmapUpdate(bitmap))
-            }
+            val userPhotoPath = it.parseUriToString()
+            onGeminiSearchEvent(GeminiSearchEvent.OnInsertUserPhoto(userPhotoPath = userPhotoPath))
         }
     }
 
@@ -254,7 +256,7 @@ fun GeminiChatSearchScreen(
                         chatHistoryResponse = geminiChatHistoryResponse,
                         typingResponse = geminiTypingResponse,
                         isGeminiTyping = isGeminiTyping,
-                        bitmap = userIconBitmap?.asImageBitmap(),
+                        bitmap = userPhotoBitmap,
                         onIconClick = {
                             sdkVersionHandler(
                                 upsideDownCakeCase = {
