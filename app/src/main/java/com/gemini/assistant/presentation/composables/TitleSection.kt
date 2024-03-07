@@ -1,6 +1,7 @@
 package com.gemini.assistant.presentation.composables
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -73,12 +73,12 @@ private fun TitleIcon(
 
         val userIconModifier = Modifier
             .size(dimensionResource(id = R.dimen._25dp))
+            .padding(dimensionResource(id = R.dimen._2dp))
+            .clip(CircleShape)
             .border(
                 border = borderStroke,
                 shape = CircleShape
             )
-            .padding(dimensionResource(id = R.dimen._2dp))
-            .clip(CircleShape)
             .clickable { onIconClick?.let { it() } }
 
         if (bitmap == null) {
@@ -89,7 +89,7 @@ private fun TitleIcon(
                 contentDescription = null
             )
         } else {
-            Icon(
+            Image(
                 modifier = userIconModifier,
                 bitmap = bitmap,
                 contentDescription = null

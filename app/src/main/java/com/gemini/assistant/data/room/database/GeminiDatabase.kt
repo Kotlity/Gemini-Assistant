@@ -7,8 +7,9 @@ import com.gemini.assistant.data.room.converters.ImagesTypeConverter
 import com.gemini.assistant.data.room.daos.GeminiChatSearchDao
 import com.gemini.assistant.data.room.daos.UserPhotoDao
 import com.gemini.assistant.data.room.entities.ChatSearchEntity
+import com.gemini.assistant.data.room.entities.UserPhotoEntity
 
-@Database(entities = [ChatSearchEntity::class], version = 1)
+@Database(entities = [ChatSearchEntity::class, UserPhotoEntity::class], version = 1)
 @TypeConverters(value = [ImagesTypeConverter::class])
 abstract class GeminiDatabase: RoomDatabase() {
 

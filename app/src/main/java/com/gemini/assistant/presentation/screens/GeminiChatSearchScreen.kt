@@ -1,7 +1,6 @@
 package com.gemini.assistant.presentation.screens
 
 import android.Manifest
-import android.content.res.Configuration
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -41,7 +40,6 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.flowWithLifecycle
 import com.gemini.assistant.R
 import com.gemini.assistant.domain.model.ChatSearchModel
@@ -358,30 +356,3 @@ fun GeminiChatSearchScreen(
         }
     }
 }
-
-//@PreviewAnnotation
-//@Composable
-//fun GeminiSearchScreenPreview() {
-//    GeminiHelperTheme {
-//        GeminiChatSearchScreen(
-//            geminiChatSearchState = GeminiChatSearchState(),
-//            connectivityStatus = ConnectivityStatus.Available(ConnectivityType.Wi_Fi),
-//            chatSearchHistory = listOf(
-//                ChatSearchModel("hello, how are you ?"),
-//                ChatSearchModel("можешь рассказать какую-нибудь длинную историю, пожалуйста ?"),
-//                ChatSearchModel("ываываываываываываываываываываываываываываыавываываываываываываываываыва"),
-//                ChatSearchModel("проверка проверка проверка проверка проверка"),
-//                ChatSearchModel("тест тест тест тест тест")
-//            ),
-//            isShowScrollDownButton = true
-//        ) {
-//
-//        }
-//    }
-//}
-
-
-
-@Preview(showBackground = true, showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Preview(showBackground = true, showSystemUi = true)
-annotation class PreviewAnnotation

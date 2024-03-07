@@ -1,6 +1,7 @@
 package com.gemini.assistant.presentation.composables
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -16,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.gemini.assistant.R
+import com.gemini.assistant.utils.Constants._1f
 import com.gemini.assistant.utils.helpers.permission.PermissionProvider
 
 @Composable
@@ -49,21 +51,27 @@ fun CustomPermissionDialog(
     AlertDialog(
         onDismissRequest = onDismissClick,
         confirmButton = {
-            CustomTextButton(
-                onTextButtonClick = if (isPermanentlyDeclined) onGoToAppSettingsClick else onOkClick,
-                text = if (isPermanentlyDeclined) stringResource(id = R.string.permanentlyDeclinedButtonText)
+            Row {
+                CustomTextButton(
+                    modifier = Modifier.weight(_1f),
+                    onTextButtonClick = if (isPermanentlyDeclined) onGoToAppSettingsClick else onOkClick,
+                    text = if (isPermanentlyDeclined) stringResource(id = R.string.permanentlyDeclinedButtonText)
                     else stringResource(id = R.string.ok),
-                containerColor = MaterialTheme.colorScheme.background,
-                contentColor = onBackgroundColor
-            )
+                    containerColor = MaterialTheme.colorScheme.background,
+                    contentColor = onBackgroundColor
+                )
+            }
         },
         dismissButton = {
-            CustomTextButton(
-                onTextButtonClick = onDismissClick,
-                text = stringResource(id = R.string.decline),
-                containerColor = MaterialTheme.colorScheme.errorContainer,
-                contentColor = MaterialTheme.colorScheme.onErrorContainer
-            )                
+            Row {
+                CustomTextButton(
+                    modifier = Modifier.weight(_1f),
+                    onTextButtonClick = onDismissClick,
+                    text = stringResource(id = R.string.decline),
+                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                    contentColor = MaterialTheme.colorScheme.onErrorContainer
+                )
+            }
         },
         icon = {
             Icon(
@@ -71,7 +79,7 @@ fun CustomPermissionDialog(
                     scaleX = animateIconScale
                     scaleY = animateIconScale
                 },
-                imageVector = permissionProvider.permissionIcon(),
+                imageVector = permissionProvider.permissionIcon,
                 tint = onBackgroundColor,
                 contentDescription = null
             )
@@ -89,7 +97,7 @@ fun CustomPermissionDialog(
                 textStyle = MaterialTheme.typography.bodyLarge
             )
         },
-        containerColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        containerColor = MaterialTheme.colorScheme.background,
         iconContentColor = onBackgroundColor,
         titleContentColor = onBackgroundColor,
         textContentColor = onBackgroundColor
