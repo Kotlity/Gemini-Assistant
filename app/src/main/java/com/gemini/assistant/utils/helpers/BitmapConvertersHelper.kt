@@ -2,8 +2,10 @@ package com.gemini.assistant.utils.helpers
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Bitmap.*
 import android.graphics.BitmapFactory
 import android.net.Uri
+import java.io.ByteArrayOutputStream
 
 fun List<String>.convertStringsToBitmaps(context: Context): List<Bitmap> {
     val bitmaps = mutableListOf<Bitmap>()
@@ -44,6 +46,21 @@ fun String.parseStringToBitmap(context: Context): Bitmap? {
     return try {
         val uri = Uri.parse(this)
         uri.parseUriToBitmap(context)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }
+}
+
+fun Bitmap.compressBitmap(
+    format: CompressFormat = CompressFormat.JPEG,
+    quality: Int = 50
+): Bitmap? {
+    return try {
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        compress(format, quality, byteArrayOutputStream)
+        val bitmapByteArray = byteArrayOutputStream.toByteArray()
+        BitmapFactory.decodeByteArray(bitmapByteArray, 0, bitmapByteArray.size)
     } catch (e: Exception) {
         e.printStackTrace()
         null

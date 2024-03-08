@@ -18,4 +18,6 @@
     <string name="media_visual_user_selected_permission_permanently_declined">It seems you permanently declined media visual user permission. You can go to the app settings to grant it.</string>
     <string name="media_images_permission_permanently_declined">It seems you permanently declined media images permission. You can go to the app settings to grant it.</string>
     <string name="external_storage_permission_permanently_declined">It seems you permanently declined external storage permission. You can go to the app settings to grant it.</string>
+    <string name="gemini_chat_top_app_bar_title">Gemini Chat</string>
+    <string name="gemini_message_top_app_bar_title">Gemini Message</string>
 </resources>

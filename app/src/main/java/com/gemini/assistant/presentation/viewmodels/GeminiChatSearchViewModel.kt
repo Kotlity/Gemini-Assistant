@@ -15,6 +15,7 @@ import com.gemini.assistant.utils.helpers.toHotFlow
 import com.gemini.assistant.utils.internet_connection.ConnectivityStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
@@ -29,7 +30,7 @@ class GeminiChatSearchViewModel @Inject constructor(private val appUseCases: App
 
     val chatSearchHistory = appUseCases.retrieveFiveLastChatSearchQueriesUseCase().toHotFlow(coroutineScope = viewModelScope, initialValue = emptyList())
 
-    val userPhotoPath = appUseCases.retrieveUserPhotoPathUseCase().toHotFlow(coroutineScope = viewModelScope, initialValue = null)
+    val userPhotoPath = appUseCases.retrieveUserPhotoPathUseCase().toHotFlow(coroutineScope = viewModelScope, sharingStrategy = SharingStarted.Eagerly, initialValue = null)
 
     var geminiChatSearchState by mutableStateOf(GeminiChatSearchState())
         private set

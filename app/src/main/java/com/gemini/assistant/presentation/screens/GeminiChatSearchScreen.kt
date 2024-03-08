@@ -67,6 +67,7 @@ import com.gemini.assistant.utils.helpers.permission.ExternalStoragePermissionPr
 import com.gemini.assistant.utils.helpers.permission.MediaImagesPermissionProvider
 import com.gemini.assistant.utils.helpers.permission.MediaVisualUserSelectedPermissionProvider
 import com.gemini.assistant.utils.helpers.animateScrollToEnd
+import com.gemini.assistant.utils.helpers.compressBitmap
 import com.gemini.assistant.utils.helpers.isKeyboardOpen
 import com.gemini.assistant.utils.helpers.parseStringToBitmap
 import com.gemini.assistant.utils.helpers.parseUriToString
@@ -124,7 +125,7 @@ fun GeminiChatSearchScreen(
 
     val context = LocalContext.current
 
-    val userPhotoBitmap = userPhotoPathFromDB?.parseStringToBitmap(context)?.asImageBitmap()
+    val userPhotoBitmap = userPhotoPathFromDB?.parseStringToBitmap(context)?.compressBitmap()?.asImageBitmap()
 
     val galleryPickerLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.PickVisualMedia()) { uri ->
         uri?.let {
