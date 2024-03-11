@@ -18,11 +18,11 @@ fun CustomTopAppBar(
     containerColor: Color = MaterialTheme.colorScheme.background,
     contentColor: Color = MaterialTheme.colorScheme.onBackground,
     scrolledContainerColor: Color = MaterialTheme.colorScheme.outline,
-    scrollBehavior: TopAppBarScrollBehavior,
+    scrollBehavior: TopAppBarScrollBehavior?,
     onNavigationIconClick: () -> Unit
 ) {
     CenterAlignedTopAppBar(
-        modifier = Modifier,
+        modifier = modifier,
         title = {
             CustomTopAppBarTitle(topAppBarTitleProvider = topAppBarTitleProvider)
         },

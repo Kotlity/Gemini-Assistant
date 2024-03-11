@@ -218,7 +218,11 @@ fun GeminiChatSearchScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(_08f)
-                .padding(dimensionResource(id = R.dimen._10dp))
+                .padding(
+                    start = dimensionResource(id = R.dimen._10dp),
+                    end = dimensionResource(id = R.dimen._10dp),
+                    bottom = dimensionResource(id = R.dimen._10dp)
+                )
                 .onGloballyPositioned {
                     scaffoldHeight = it.size.height
                 },

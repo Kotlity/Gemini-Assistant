@@ -23,8 +23,8 @@ fun CustomNavigationDrawerItem(
     onItemClick: (String) -> Unit
 ) {
 
-    val containerColor = MaterialTheme.colorScheme.background
-    val contentColor = MaterialTheme.colorScheme.onBackground
+    val containerColor = MaterialTheme.colorScheme.primary
+    val contentColor = MaterialTheme.colorScheme.onPrimary
 
     NavigationDrawerItem(
         modifier = modifier,

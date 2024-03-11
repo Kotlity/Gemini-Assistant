@@ -36,14 +36,15 @@ fun GeneralContentSurface(
 ) {
 
     val currentDestination = navHostController.currentBackStackEntryAsState().value?.destination?.route
+    val isChatScreenDestination = currentDestination == ScreenRoutes.GeminiChat.route
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val topAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val coroutineScope = rememberCoroutineScope()
 
     CustomModalNavigationDrawer(
         navigationDrawerItemInfo = when(currentDestination) {
-            ScreenRoutes.GeminiChat.route -> NavigationDrawerItemInfo(icon = Icons.Default.ChatBubbleOutline, title = stringResource(id = R.string.gemini_chat_top_app_bar_title))
-            ScreenRoutes.GeminiMessage.route -> NavigationDrawerItemInfo(icon = Icons.Default.Message, title = stringResource(id = R.string.gemini_message_top_app_bar_title))
+            ScreenRoutes.GeminiChat.route -> NavigationDrawerItemInfo(icon = Icons.Default.Message, title = stringResource(id = R.string.gemini_message_top_app_bar_title))
+            ScreenRoutes.GeminiMessage.route -> NavigationDrawerItemInfo(icon = Icons.Default.ChatBubbleOutline, title = stringResource(id = R.string.gemini_chat_top_app_bar_title))
             else -> NavigationDrawerItemInfo(icon = Icons.Default.ChatBubbleOutline, title = stringResource(id = R.string.gemini_chat_top_app_bar_title))
         },
         drawerState = drawerState,
@@ -56,9 +57,11 @@ fun GeneralContentSurface(
         },
         content = {
             Scaffold(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                modifier = Modifier.then(
+                  if (isChatScreenDestination) Modifier.fillMaxSize()
+                  else Modifier.fillMaxSize()
+                      .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
+                ),
                 topBar = {
                     CustomTopAppBar(
                         modifier = Modifier
@@ -69,7 +72,7 @@ fun GeneralContentSurface(
                             ScreenRoutes.GeminiMessage.route -> GeminiMessageTopAppBarTitle()
                             else -> GeminiChatTopAppBarTitle()
                         },
-                        scrollBehavior = topAppBarScrollBehavior,
+                        scrollBehavior = if (isChatScreenDestination) null else topAppBarScrollBehavior,
                         onNavigationIconClick = {
                             coroutineScope.launch {
                                 drawerState.open()
