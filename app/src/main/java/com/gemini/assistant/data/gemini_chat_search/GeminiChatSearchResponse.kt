@@ -36,11 +36,11 @@ class GeminiChatSearchResponse @Inject constructor(
         get() = retrieveChatHistoryResponse()
 
     override fun chatSearch(searchText: String): Flow<String> {
-        val searchContent = content("user") {
+        val chatSearchContent = content("user") {
             text(searchText)
         }
 
-        return proChat.sendMessageStream(searchContent)
+        return proChat.sendMessageStream(chatSearchContent)
             .map { chatResponse ->
                 chatResponse.text ?: ERROR
             }

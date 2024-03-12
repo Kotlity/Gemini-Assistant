@@ -6,6 +6,8 @@ object Constants {
 
     const val DATABASE_NAME = "gemini_search.db"
     const val ERROR = "Something went wrong"
+    const val LOADING_MESSAGE = "Please wait while the model generates a response"
+    const val UNKNOWN_ERROR = "Unknown error occurred..."
 
     const val MAX_SEARCH_QUERIES = 5
 
