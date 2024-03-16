@@ -1,5 +1,8 @@
 package com.gemini.assistant.utils
 
+import android.Manifest
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.ui.unit.sp
 
 object Constants {
@@ -27,4 +30,10 @@ object Constants {
     const val _08f = 0.8f
     const val _1f = 1f
     const val _1_5f = 1.5f
+
+    const val EXTERNAL_STORAGE_PERMISSION = Manifest.permission.READ_EXTERNAL_STORAGE
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    const val MEDIA_IMAGES_PERMISSION = Manifest.permission.READ_MEDIA_IMAGES
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    const val MEDIA_VISUAL_USER_SELECTED_PERMISSION = Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED
 }

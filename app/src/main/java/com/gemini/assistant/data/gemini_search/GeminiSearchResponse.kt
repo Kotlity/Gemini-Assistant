@@ -49,7 +49,7 @@ class GeminiSearchResponse @Inject constructor(
             }
         }
 
-        return flow<GeminiResult<List<SearchResponseDto>>> {
+        return flow {
             emit(GeminiResult.Loading(loadingMessage = LOADING_MESSAGE))
 
             val response = geminiProVisionModel.generateContent(searchContent)

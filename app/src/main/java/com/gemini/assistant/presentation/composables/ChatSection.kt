@@ -5,9 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.gemini.assistant.R
 
@@ -16,7 +14,7 @@ fun ChatSection(
     textModifier: Modifier = Modifier,
     response: List<String>,
     index: Int,
-    bitmap: ImageBitmap? = null,
+    image: String? = null,
     onIconClick: (() -> Unit)? = null,
     onTextCopied: ((String) -> Unit)? = null
 ) {
@@ -27,7 +25,7 @@ fun ChatSection(
         if (index % 2 == 0) {
             ChatUserSection(
                 userInput = response[index],
-                bitmap = bitmap,
+                image = image,
                 onIconClick = onIconClick,
                 onTextCopied = onTextCopied
             )

@@ -11,7 +11,6 @@ class AppComposeNavigator(private val navHostController: NavHostController): Nav
 
     override fun navigate(route: String) {
         navHostController.navigate(route) {
-            launchSingleTop = true
             popUpTo(route)
         }
     }

@@ -1,11 +1,8 @@
 package com.gemini.assistant.presentation.screens
 
-import android.Manifest
-import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
@@ -31,7 +28,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
@@ -52,9 +48,12 @@ import com.gemini.assistant.presentation.composables.CustomDivider
 import com.gemini.assistant.presentation.composables.CustomPermissionDialog
 import com.gemini.assistant.presentation.composables.SearchTextField
 import com.gemini.assistant.presentation.composables.WelcomeWidget
-import com.gemini.assistant.presentation.events.GeminiSearchEvent
+import com.gemini.assistant.presentation.events.GeminiChatSearchEvent
 import com.gemini.assistant.presentation.states.GeminiChatSearchState
+import com.gemini.assistant.utils.Constants.EXTERNAL_STORAGE_PERMISSION
 import com.gemini.assistant.utils.Constants.MAX_SEARCH_QUERIES
+import com.gemini.assistant.utils.Constants.MEDIA_IMAGES_PERMISSION
+import com.gemini.assistant.utils.Constants.MEDIA_VISUAL_USER_SELECTED_PERMISSION
 import com.gemini.assistant.utils.Constants._02f
 import com.gemini.assistant.utils.Constants._05f
 import com.gemini.assistant.utils.Constants._08f
@@ -67,9 +66,7 @@ import com.gemini.assistant.utils.helpers.permission.ExternalStoragePermissionPr
 import com.gemini.assistant.utils.helpers.permission.MediaImagesPermissionProvider
 import com.gemini.assistant.utils.helpers.permission.MediaVisualUserSelectedPermissionProvider
 import com.gemini.assistant.utils.helpers.animateScrollToEnd
-import com.gemini.assistant.utils.helpers.compressBitmap
 import com.gemini.assistant.utils.helpers.isKeyboardOpen
-import com.gemini.assistant.utils.helpers.parseStringToBitmap
 import com.gemini.assistant.utils.helpers.parseUriToString
 import com.gemini.assistant.utils.helpers.permission.goToAppSettings
 import com.gemini.assistant.utils.helpers.permission.isShouldShowRequestPermissionRationale
@@ -82,12 +79,6 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
-private const val EXTERNAL_STORAGE_PERMISSION = Manifest.permission.READ_EXTERNAL_STORAGE
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
-private const val MEDIA_IMAGES_PERMISSION = Manifest.permission.READ_MEDIA_IMAGES
-@RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
-private const val MEDIA_VISUAL_USER_SELECTED_PERMISSION = Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED
-
 @OptIn(FlowPreview::class)
 @Composable
 fun GeminiChatSearchScreen(
@@ -96,7 +87,7 @@ fun GeminiChatSearchScreen(
     chatSearchHistory: List<ChatSearchModel>,
     userPhotoPathFromDB: String?,
     isShowScrollDownButton: Boolean,
-    onGeminiSearchEvent: (GeminiSearchEvent) -> Unit
+    onGeminiChatSearchEvent: (GeminiChatSearchEvent) -> Unit
 ) {
 
     val isAlreadyStartConversation = geminiChatSearchState.isAlreadyStartConversation
@@ -125,12 +116,12 @@ fun GeminiChatSearchScreen(
 
     val context = LocalContext.current
 
-    val userPhotoBitmap = userPhotoPathFromDB?.parseStringToBitmap(context)?.compressBitmap()?.asImageBitmap()
+//    val userPhotoBitmap = userPhotoPathFromDB?.parseStringToBitmap(context)?.compressBitmap()?.asImageBitmap()
 
     val galleryPickerLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.PickVisualMedia()) { uri ->
         uri?.let {
             val userPhotoPath = it.parseUriToString()
-            onGeminiSearchEvent(GeminiSearchEvent.OnInsertUserPhoto(userPhotoPath = userPhotoPath))
+            onGeminiChatSearchEvent(GeminiChatSearchEvent.OnInsertUserPhoto(userPhotoPath = userPhotoPath))
         }
     }
 
@@ -138,7 +129,7 @@ fun GeminiChatSearchScreen(
         val areAllPermissionsGranted = permissionsMap.values.all { it }
         if (areAllPermissionsGranted) galleryPickerLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         permissionsMap.keys.forEach { permission ->
-            onGeminiSearchEvent(GeminiSearchEvent.OnPermissionResult(permission, permissionsMap[permission] == true))
+            onGeminiChatSearchEvent(GeminiChatSearchEvent.OnPermissionResult(permission, permissionsMap[permission] == true))
         }
     }
 
@@ -154,10 +145,10 @@ fun GeminiChatSearchScreen(
                 },
                 isPermanentlyDeclined = !isShouldShowRequestPermissionRationale(context, permission),
                 onDismissClick = {
-                    onGeminiSearchEvent(GeminiSearchEvent.OnDismissPermissionDialog)
+                    onGeminiChatSearchEvent(GeminiChatSearchEvent.OnDismissPermissionDialog)
                 },
                 onOkClick = {
-                    onGeminiSearchEvent(GeminiSearchEvent.OnDismissPermissionDialog)
+                    onGeminiChatSearchEvent(GeminiChatSearchEvent.OnDismissPermissionDialog)
                     multiplePermissionsGalleryLauncher.launch(arrayOf(permission))
                 },
                 onGoToAppSettingsClick = {
@@ -188,8 +179,8 @@ fun GeminiChatSearchScreen(
             .debounce(_300L)
             .flowWithLifecycle(lifecycle)
             .collectLatest { canScrollForward ->
-                if (canScrollForward) onGeminiSearchEvent(GeminiSearchEvent.IsShowScrollDownButtonUpdate(true))
-                else onGeminiSearchEvent(GeminiSearchEvent.IsShowScrollDownButtonUpdate(false))
+                if (canScrollForward) onGeminiChatSearchEvent(GeminiChatSearchEvent.IsShowScrollDownButtonUpdate(true))
+                else onGeminiChatSearchEvent(GeminiChatSearchEvent.IsShowScrollDownButtonUpdate(false))
             }
     }
 
@@ -205,7 +196,7 @@ fun GeminiChatSearchScreen(
     LaunchedEffect(key1 = chatSearchHistory) {
         val isChatSearchHistoryFull = chatSearchHistory.size == MAX_SEARCH_QUERIES
         if (isChatSearchHistoryFull) {
-            onGeminiSearchEvent(GeminiSearchEvent.OnDeleteChatSearchOlder)
+            onGeminiChatSearchEvent(GeminiChatSearchEvent.OnDeleteChatChatSearchOlder)
         }
     }
 
@@ -236,7 +227,7 @@ fun GeminiChatSearchScreen(
                         onClick = {
                             coroutineScope.launch {
                                 lazyListState.animateScrollToEnd(scaffoldHeight)
-                                onGeminiSearchEvent(GeminiSearchEvent.IsShowScrollDownButtonUpdate(false))
+                                onGeminiChatSearchEvent(GeminiChatSearchEvent.IsShowScrollDownButtonUpdate(false))
                             }
                         }
                     )
@@ -259,7 +250,7 @@ fun GeminiChatSearchScreen(
                         chatHistoryResponse = geminiChatHistoryResponse,
                         typingResponse = geminiTypingResponse,
                         isGeminiTyping = isGeminiTyping,
-                        bitmap = userPhotoBitmap,
+                        image = userPhotoPathFromDB,
                         onIconClick = {
                             sdkVersionHandler(
                                 upsideDownCakeCase = {
@@ -294,7 +285,7 @@ fun GeminiChatSearchScreen(
                     .padding(horizontal = dimensionResource(id = R.dimen._10dp)),
                 chatSearchHistory = chatSearchHistory,
                 onItemClick = { searchHistoryItem ->
-                    onGeminiSearchEvent(GeminiSearchEvent.OnSearchInputUpdate(searchHistoryItem))
+                    onGeminiChatSearchEvent(GeminiChatSearchEvent.OnChatSearchInputUpdate(searchHistoryItem))
                 }
             )
         }
@@ -320,7 +311,7 @@ fun GeminiChatSearchScreen(
                         },
                     searchText = textFieldSearchInput,
                     onSearchTextChange = {
-                        onGeminiSearchEvent(GeminiSearchEvent.OnSearchInputUpdate(it))
+                        onGeminiChatSearchEvent(GeminiChatSearchEvent.OnChatSearchInputUpdate(it))
                     },
                     textFieldEnabled = !isGeminiTyping && connectivityStatus is ConnectivityStatus.Available,
                     textStyle = MaterialTheme.typography.labelLarge.copy(
@@ -333,7 +324,7 @@ fun GeminiChatSearchScreen(
                     ),
                     trailingIconEnabled = textFieldSearchInput.isNotBlank(),
                     onSearchTrailingIconClick = {
-                        onGeminiSearchEvent(GeminiSearchEvent.OnSearchRequest)
+                        onGeminiChatSearchEvent(GeminiChatSearchEvent.OnChatSearchRequest)
                     },
                     shape = RoundedCornerShape(dimensionResource(id = R.dimen._25dp)),
                     colors = OutlinedTextFieldDefaults.colors(

@@ -1,7 +1,6 @@
 package com.gemini.assistant.presentation.composables
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,10 +14,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.gemini.assistant.R
 import com.gemini.assistant.utils.Constants._18sp
 
@@ -28,7 +29,7 @@ fun TitleSection(
     horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(dimensionResource(id = R.dimen._2dp), Alignment.Start),
     isGeminiTitle: Boolean = true,
     title: String,
-    bitmap: ImageBitmap? = null,
+    image: String? = null,
     onIconClick: (() -> Unit)? = null
 ) {
     Row(
@@ -42,7 +43,7 @@ fun TitleSection(
         } else {
             TitleText(title = title)
             TitleIcon(
-                bitmap = bitmap,
+                image = image,
                 isGeminiIcon = false,
                 onIconClick = onIconClick
             )
@@ -52,7 +53,7 @@ fun TitleSection(
 
 @Composable
 private fun TitleIcon(
-    bitmap: ImageBitmap? = null,
+    image: String? = null,
     isGeminiIcon: Boolean = true,
     onIconClick: (() -> Unit)? = null
 ) {
@@ -81,7 +82,7 @@ private fun TitleIcon(
             )
             .clickable { onIconClick?.let { it() } }
 
-        if (bitmap == null) {
+        if (image == null) {
             Icon(
                 modifier = userIconModifier,
                 painter = painterResource(id = R.drawable.user_default_logo),
@@ -89,11 +90,23 @@ private fun TitleIcon(
                 contentDescription = null
             )
         } else {
-            Image(
+            val context = LocalContext.current
+
+            val imageRequest = ImageRequest
+                .Builder(context)
+                .data(image)
+                .build()
+
+            AsyncImage(
                 modifier = userIconModifier,
-                bitmap = bitmap,
+                model = imageRequest,
                 contentDescription = null
             )
+//            Image(
+//                modifier = userIconModifier,
+//                bitmap = bitmap,
+//                contentDescription = null
+//            )
         }
     }
 }

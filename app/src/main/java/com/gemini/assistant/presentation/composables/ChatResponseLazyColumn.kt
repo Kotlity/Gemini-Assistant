@@ -6,7 +6,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.res.dimensionResource
 import com.gemini.assistant.R
 
@@ -20,7 +19,7 @@ fun ChatResponseLazyColumn(
     chatHistoryResponse: List<String> = emptyList(),
     typingResponse: String = "",
     isGeminiTyping: Boolean = false,
-    bitmap: ImageBitmap? = null,
+    image: String? = null,
     onIconClick: (() -> Unit)? = null,
     onTextCopied: (String) -> Unit
 ) {
@@ -35,7 +34,7 @@ fun ChatResponseLazyColumn(
                 textModifier = customTextModifier,
                 response = chatHistoryResponse,
                 index = index,
-                bitmap = bitmap,
+                image = image,
                 onIconClick = if (!isGeminiTyping) onIconClick else null,
                 onTextCopied = onTextCopied
             )

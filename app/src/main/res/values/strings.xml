@@ -13,8 +13,8 @@
     <string name="decline">Decline</string>
     <string name="permanentlyDeclinedButtonText">Grant permission</string>
     <string name="titlePermission">Permission required</string>
-    <string name="gallery_rationale_permission">You need to give access to the phone gallery to change a user avatar</string>
-    <string name="external_storage_rationale_permission">You need to give access to the phone\'s external storage to change a user avatar</string>
+    <string name="gallery_rationale_permission">You need to give access to the phone gallery to change a user avatar or to pick some image(s)</string>
+    <string name="external_storage_rationale_permission">You need to give access to the phone\'s external storage to change a user avatar or to pick some image(s)</string>
     <string name="media_visual_user_selected_permission_permanently_declined">It seems you permanently declined media visual user permission. You can go to the app settings to grant it.</string>
     <string name="media_images_permission_permanently_declined">It seems you permanently declined media images permission. You can go to the app settings to grant it.</string>
     <string name="external_storage_permission_permanently_declined">It seems you permanently declined external storage permission. You can go to the app settings to grant it.</string>

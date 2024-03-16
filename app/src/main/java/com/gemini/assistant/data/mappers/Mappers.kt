@@ -37,20 +37,6 @@ fun SearchResponseDto.toSearchResponseModel(): SearchResponseModel {
     )
 }
 
-fun SearchResponseModel.toSearchResponseDto(): SearchResponseDto {
-    return SearchResponseDto(
-        searchResponse = searchResponse,
-        searchResponseImage = searchResponseImage
-    )
-}
-
-fun SearchRequestDto.toSearchRequestModel(): SearchRequestModel {
-    return SearchRequestModel(
-        searchRequest = searchRequest,
-        searchRequestImages = searchRequestImages ?: emptyList()
-    )
-}
-
 fun SearchRequestModel.toSearchRequestDto(): SearchRequestDto {
     return SearchRequestDto(
         searchRequest = searchRequest,
@@ -63,5 +49,15 @@ fun GeminiResult<List<SearchResponseDto>>.mapGeminiResult(): GeminiResult<List<S
         is GeminiResult.Success -> GeminiResult.Success(data = data?.map { it.toSearchResponseModel() } ?: emptyList())
         is GeminiResult.Error -> GeminiResult.Error(errorMessage = errorMessage ?: UNKNOWN_ERROR)
         is GeminiResult.Loading -> GeminiResult.Loading(loadingMessage = loadingMessage ?: LOADING_MESSAGE)
+        is GeminiResult.Undefined -> GeminiResult.Undefined()
+    }
+}
+
+fun GeminiResult<List<SearchResponseModel>>.updateGeminiResult(): GeminiResult<SearchResponseModel> {
+    return when (this) {
+        is GeminiResult.Error -> GeminiResult.Error(errorMessage = errorMessage ?: UNKNOWN_ERROR)
+        is GeminiResult.Loading -> GeminiResult.Loading(loadingMessage = loadingMessage ?: LOADING_MESSAGE)
+        is GeminiResult.Success -> GeminiResult.Success(data = data?.first() ?: SearchResponseModel())
+        is GeminiResult.Undefined -> GeminiResult.Undefined()
     }
 }

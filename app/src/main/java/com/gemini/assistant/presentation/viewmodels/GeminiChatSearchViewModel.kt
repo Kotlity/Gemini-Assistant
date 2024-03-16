@@ -9,10 +9,10 @@ import androidx.lifecycle.viewModelScope
 import com.gemini.assistant.domain.model.ChatSearchModel
 import com.gemini.assistant.domain.model.UserPhotoModel
 import com.gemini.assistant.domain.usecases.AppUseCases
+import com.gemini.assistant.presentation.events.GeminiChatSearchEvent
 import com.gemini.assistant.presentation.events.GeminiSearchEvent
 import com.gemini.assistant.presentation.states.GeminiChatSearchState
 import com.gemini.assistant.utils.helpers.toHotFlow
-import com.gemini.assistant.utils.internet_connection.ConnectivityStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
@@ -24,8 +24,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GeminiChatSearchViewModel @Inject constructor(private val appUseCases: AppUseCases): ViewModel() {
-
-    val connectivityStatus = appUseCases.connectionHandlerUseCase().toHotFlow(coroutineScope = viewModelScope, initialValue = ConnectivityStatus.Unavailable)
 
     val chatSearchHistory = appUseCases.retrieveFiveLastChatSearchQueriesUseCase().toHotFlow(coroutineScope = viewModelScope, initialValue = emptyList())
 
@@ -41,27 +39,27 @@ class GeminiChatSearchViewModel @Inject constructor(private val appUseCases: App
 
     private var geminiTypingResponseJob: Job? = null
 
-    fun onEvent(geminiSearchEvent: GeminiSearchEvent) {
-        when(geminiSearchEvent) {
-            is GeminiSearchEvent.OnSearchInputUpdate -> {
-                onSearchInputUpdate(geminiSearchEvent.searchInput)
+    fun onEvent(geminiChatSearchEvent: GeminiChatSearchEvent) {
+        when(geminiChatSearchEvent) {
+            is GeminiChatSearchEvent.OnChatSearchInputUpdate -> {
+                onSearchInputUpdate(geminiChatSearchEvent.searchInput)
             }
-            is GeminiSearchEvent.IsShowScrollDownButtonUpdate -> {
-                isShowScrollDownButtonUpdate(geminiSearchEvent.isShowScrollDownButton)
+            is GeminiChatSearchEvent.IsShowScrollDownButtonUpdate -> {
+                isShowScrollDownButtonUpdate(geminiChatSearchEvent.isShowScrollDownButton)
             }
-            is GeminiSearchEvent.OnPermissionResult -> {
-                onPermissionResult(geminiSearchEvent.permission, geminiSearchEvent.isGranted)
+            is GeminiChatSearchEvent.OnPermissionResult -> {
+                onPermissionResult(geminiChatSearchEvent.permission, geminiChatSearchEvent.isGranted)
             }
-            is GeminiSearchEvent.OnInsertUserPhoto -> {
-                onInsertUserPhoto(geminiSearchEvent.userPhotoPath)
+            is GeminiChatSearchEvent.OnInsertUserPhoto -> {
+                onInsertUserPhoto(geminiChatSearchEvent.userPhotoPath)
             }
-            GeminiSearchEvent.OnSearchRequest -> {
+            GeminiChatSearchEvent.OnChatSearchRequest -> {
                 onSearchRequest()
             }
-            GeminiSearchEvent.OnDeleteChatSearchOlder -> {
+            GeminiChatSearchEvent.OnDeleteChatChatSearchOlder -> {
                 onDeleteChatSearchOlder()
             }
-            GeminiSearchEvent.OnDismissPermissionDialog -> {
+            GeminiChatSearchEvent.OnDismissPermissionDialog -> {
                 onDismissPermissionDialog()
             }
         }

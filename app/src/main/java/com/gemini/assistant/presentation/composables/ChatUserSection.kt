@@ -7,9 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.gemini.assistant.R
@@ -17,7 +15,7 @@ import com.gemini.assistant.R
 @Composable
 fun ChatUserSection(
     userInput: String,
-    bitmap: ImageBitmap? = null,
+    image: String? = null,
     onIconClick: (() -> Unit)? = null,
     onTextCopied: ((String) -> Unit)? = null
 ) {
@@ -32,7 +30,7 @@ fun ChatUserSection(
             horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen._2dp), Alignment.End),
             isGeminiTitle = false,
             title = stringResource(id = R.string.userTitle),
-            bitmap = bitmap,
+            image = image,
             onIconClick = onIconClick
         )
         ChatTextResponse(
