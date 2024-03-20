@@ -26,7 +26,10 @@ object Constants {
 
     const val _0f = 0f
     const val _02f = 0.2f
+    const val _02_5f = 0.25f
     const val _05f = 0.5f
+    const val _07f = 0.7f
+    const val _07_5f = 0.75f
     const val _08f = 0.8f
     const val _1f = 1f
     const val _1_5f = 1.5f

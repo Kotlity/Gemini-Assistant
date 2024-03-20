@@ -36,7 +36,7 @@ fun WelcomeWidget(
     horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
     verticalArrangement: Arrangement.Vertical = Arrangement.Center,
     imageVector: ImageVector = Icons.Default.Computer,
-    text: String = stringResource(id = R.string.welcome)
+    text: String = stringResource(id = R.string.chat_search_welcome)
 ) {
 
     var alphaTriggerStarter by rememberSaveable {

@@ -39,6 +39,8 @@ class GeminiSearchViewModel @Inject constructor(private val appUseCases: AppUseC
             is GeminiSearchEvent.IsShowScrollDownButtonUpdate -> isShowScrollDownButtonUpdate(geminiSearchEvent.isShowScrollDownButton)
             is GeminiSearchEvent.OnPermissionResult -> onPermissionResult(geminiSearchEvent.permission, geminiSearchEvent.isGranted)
             is GeminiSearchEvent.OnSearchRequestImageDelete -> onSearchRequestImageDelete(geminiSearchEvent.image)
+            is GeminiSearchEvent.OnSearchRequestImageExpand -> onSearchRequestImageExpand(geminiSearchEvent.image)
+            GeminiSearchEvent.OnSearchRequestImageContract -> onSearchRequestImageContract()
             GeminiSearchEvent.OnDismissPermissionDialog -> onDismissPermissionDialog()
             GeminiSearchEvent.OnSearchRequest -> onSearchRequest()
         }
@@ -71,6 +73,14 @@ class GeminiSearchViewModel @Inject constructor(private val appUseCases: AppUseC
         updatedSearchRequestImages.remove(image)
         val updatedSearchRequestModel = geminiSearchState.searchRequestModel.copy(searchRequestImages = updatedSearchRequestImages.toList())
         geminiSearchState = geminiSearchState.copy(searchRequestModel = updatedSearchRequestModel)
+    }
+
+    private fun onSearchRequestImageExpand(image: Bitmap) {
+        geminiSearchState = geminiSearchState.copy(expandedImage = image)
+    }
+
+    private fun onSearchRequestImageContract() {
+        geminiSearchState = geminiSearchState.copy(expandedImage = null)
     }
 
     private fun onDismissPermissionDialog() {

@@ -5,7 +5,8 @@
     <string name="undefined_internet_connection">Undefined Internet connection</string>
     <string name="lost_internet_connection">Internet connection has been lost</string>
     <string name="unavailable_internet_connection">Internet connection not available</string>
-    <string name="welcome">How can I help you today ?</string>
+    <string name="chat_search_welcome">How can I help you today ?</string>
+    <string name="search_welcome">I\'ll we glad to help you</string>
     <string name="searchTextFieldPlaceholder">Ask me something…</string>
     <string name="geminiTitle">Gemini</string>
     <string name="userTitle">You</string>
@@ -20,4 +21,5 @@
     <string name="external_storage_permission_permanently_declined">It seems you permanently declined external storage permission. You can go to the app settings to grant it.</string>
     <string name="gemini_chat_top_app_bar_title">Gemini Chat</string>
     <string name="gemini_message_top_app_bar_title">Gemini Message</string>
+    <string name="try_again_title">Try again</string>
 </resources>

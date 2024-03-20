@@ -12,6 +12,8 @@
     <dimen name="_24dp">20dp</dimen>
     <dimen name="_25dp">25dp</dimen>
     <dimen name="_35dp">35dp</dimen>
+    <dimen name="_90dp">90dp</dimen>
     <dimen name="_150dp">150dp</dimen>
+    <dimen name="_200dp">200dp</dimen>
 
 </resources>

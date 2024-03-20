@@ -14,12 +14,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.gemini.assistant.R
 import com.gemini.assistant.utils.Constants._18sp
 
@@ -90,23 +87,10 @@ private fun TitleIcon(
                 contentDescription = null
             )
         } else {
-            val context = LocalContext.current
-
-            val imageRequest = ImageRequest
-                .Builder(context)
-                .data(image)
-                .build()
-
-            AsyncImage(
+            CustomAsyncImage(
                 modifier = userIconModifier,
-                model = imageRequest,
-                contentDescription = null
+                data = image
             )
-//            Image(
-//                modifier = userIconModifier,
-//                bitmap = bitmap,
-//                contentDescription = null
-//            )
         }
     }
 }
