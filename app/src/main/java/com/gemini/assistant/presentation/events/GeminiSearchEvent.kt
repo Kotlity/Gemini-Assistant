@@ -10,6 +10,7 @@ sealed class GeminiSearchEvent {
     data class OnPermissionResult(val permission: String, val isGranted: Boolean): GeminiSearchEvent()
     data class OnSearchRequestImageDelete(val image: Bitmap): GeminiSearchEvent()
     data class OnSearchRequestImageExpand(val image: Bitmap): GeminiSearchEvent()
+    data object OnUpdateSearchRequestModel: GeminiSearchEvent()
     data object OnSearchRequestImageContract: GeminiSearchEvent()
     data object OnDismissPermissionDialog: GeminiSearchEvent()
     data object OnSearchRequest: GeminiSearchEvent()

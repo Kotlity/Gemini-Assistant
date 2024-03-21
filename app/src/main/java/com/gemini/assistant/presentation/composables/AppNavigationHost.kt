@@ -57,12 +57,14 @@ fun AppNavigationHost(
                 val geminiSearchViewModel = hiltViewModel<GeminiSearchViewModel>()
 
                 val geminiSearchState = geminiSearchViewModel.geminiSearchState
+                val searchRequestModelCleaner = geminiSearchViewModel.searchRequestModelCleanerFlow
                 val isShowScrollDownButton = geminiSearchViewModel.isShowScrollDownButton
 
                 val connectivityStatus by internetConnectionViewModel.internetConnection.collectAsStateWithLifecycle()
 
                 GeminiSearchScreen(
                     geminiSearchState = geminiSearchState,
+                    searchRequestModelCleaner = searchRequestModelCleaner,
                     connectivityStatus = connectivityStatus,
                     onGeminiSearchEvent = geminiSearchViewModel::onEvent,
                     isShowScrollDownButton = isShowScrollDownButton

@@ -4,7 +4,6 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,7 +17,6 @@ fun CustomTopAppBar(
     containerColor: Color = MaterialTheme.colorScheme.background,
     contentColor: Color = MaterialTheme.colorScheme.onBackground,
     scrolledContainerColor: Color = MaterialTheme.colorScheme.outline,
-    scrollBehavior: TopAppBarScrollBehavior?,
     onNavigationIconClick: () -> Unit
 ) {
     CenterAlignedTopAppBar(
@@ -34,7 +32,6 @@ fun CustomTopAppBar(
             scrolledContainerColor = scrolledContainerColor,
             navigationIconContentColor = contentColor,
             titleContentColor = contentColor
-        ),
-        scrollBehavior = scrollBehavior
+        )
     )
 }

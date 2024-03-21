@@ -21,7 +21,7 @@ fun SearchResponseSection(
             text = searchResponseModel.searchResponse,
             onTextCopied = onTextCopied,
             textStyle = MaterialTheme.typography.bodyMedium.copy(
-                fontSize = Constants._16sp,
+                fontSize = Constants._18sp,
                 color = MaterialTheme.colorScheme.onBackground
             )
         )

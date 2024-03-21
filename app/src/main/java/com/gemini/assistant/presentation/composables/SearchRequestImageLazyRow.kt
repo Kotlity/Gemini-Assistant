@@ -29,16 +29,16 @@ fun SearchRequestImageLazyRow(
     ) {
         items(
             images,
-            key = { it.rowBytes }
+            key = { it.generationId }
         ) { image ->
             SearchRequestImageSection(
                 modifier = Modifier
                     .size(dimensionResource(id = R.dimen._90dp))
                     .shadow(
-                        elevation = dimensionResource(id = R.dimen._3dp),
+                        elevation = dimensionResource(id = R.dimen._1dp),
                         shape = RoundedCornerShape(dimensionResource(id = R.dimen._10dp))
                     )
-                    .padding(end = dimensionResource(id = R.dimen._2dp))
+                    .padding(end = dimensionResource(id = R.dimen._5dp))
                     .animateItemPlacement(),
                 image = image,
                 onDeleteIconClick = {

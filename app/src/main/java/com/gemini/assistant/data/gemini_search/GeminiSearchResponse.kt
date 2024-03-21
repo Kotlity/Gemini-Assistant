@@ -3,6 +3,7 @@ package com.gemini.assistant.data.gemini_search
 import com.gemini.assistant.data.dispatchers.AppDispatcher
 import com.gemini.assistant.data.dto.SearchRequestDto
 import com.gemini.assistant.data.dto.SearchResponseDto
+import com.gemini.assistant.di.annotations.GeminiProModel
 import com.gemini.assistant.di.annotations.GeminiProVisionModel
 import com.gemini.assistant.domain.search.SearchResponse
 import com.gemini.assistant.utils.Constants.LOADING_MESSAGE
@@ -20,6 +21,8 @@ import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class GeminiSearchResponse @Inject constructor(
+    @GeminiProModel
+    private val geminiProModel: GenerativeModel,
     @GeminiProVisionModel
     private val geminiProVisionModel: GenerativeModel,
     private val appDispatcher: AppDispatcher
@@ -39,10 +42,10 @@ class GeminiSearchResponse @Inject constructor(
     }
 
     override fun search(searchRequestData: SearchRequestDto): Flow<GeminiResult<List<SearchResponseDto>>> {
-//        val result = mutableListOf<SearchResponseDto>()
+        val isImagesPicked = searchRequestData.searchRequestImages?.isNotEmpty()
         val searchContent = content("user") {
             text(searchRequestData.searchRequest)
-            if (searchRequestData.searchRequestImages != null) {
+            if (isImagesPicked == true) {
                 searchRequestData.searchRequestImages.forEach { bitmap ->
                     image(bitmap)
                 }
@@ -52,17 +55,11 @@ class GeminiSearchResponse @Inject constructor(
         return flow {
             emit(GeminiResult.Loading(loadingMessage = LOADING_MESSAGE))
 
-            val response = geminiProVisionModel.generateContent(searchContent)
+            val response = if (isImagesPicked == true) geminiProVisionModel.generateContent(searchContent)
+            else geminiProModel.generateContent(searchContent)
+
 
             val result = response.retrieveModelResponse()
-//            response.candidates.forEach { candidate ->
-//                candidate.content.parts.forEach { part ->
-//                    val text = part.asTextOrNull() ?: ""
-//                    val image = part.asImageOrNull()
-//                    val searchResponseDto = SearchResponseDto(searchResponse = text, searchResponseImage = image)
-//                    result.add(searchResponseDto)
-//                }
-//            }
             emit(GeminiResult.Success(data = result))
         }
             .catch { throwable ->

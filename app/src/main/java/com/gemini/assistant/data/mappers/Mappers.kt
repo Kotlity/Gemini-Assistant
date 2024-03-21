@@ -53,11 +53,14 @@ fun GeminiResult<List<SearchResponseDto>>.mapGeminiResult(): GeminiResult<List<S
     }
 }
 
-fun GeminiResult<List<SearchResponseModel>>.updateGeminiResult(): GeminiResult<SearchResponseModel> {
+fun GeminiResult<List<SearchResponseModel>>.updateGeminiResult(onSuccess: () -> Unit): GeminiResult<SearchResponseModel> {
     return when (this) {
         is GeminiResult.Error -> GeminiResult.Error(errorMessage = errorMessage ?: UNKNOWN_ERROR)
         is GeminiResult.Loading -> GeminiResult.Loading(loadingMessage = loadingMessage ?: LOADING_MESSAGE)
-        is GeminiResult.Success -> GeminiResult.Success(data = data?.first() ?: SearchResponseModel())
+        is GeminiResult.Success -> {
+            onSuccess()
+            GeminiResult.Success(data = data?.first() ?: SearchResponseModel())
+        }
         is GeminiResult.Undefined -> GeminiResult.Undefined()
     }
 }

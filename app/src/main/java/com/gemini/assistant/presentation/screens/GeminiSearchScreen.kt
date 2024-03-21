@@ -22,9 +22,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.QuestionMark
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -50,6 +52,7 @@ import com.gemini.assistant.presentation.composables.ChatFloatingActionButton
 import com.gemini.assistant.presentation.composables.ConnectionInfoWidget
 import com.gemini.assistant.presentation.composables.ContentSurface
 import com.gemini.assistant.presentation.composables.CustomDivider
+import com.gemini.assistant.presentation.composables.CustomModalBottomSheet
 import com.gemini.assistant.presentation.composables.CustomPermissionDialog
 import com.gemini.assistant.presentation.composables.ErrorSection
 import com.gemini.assistant.presentation.composables.ImagePickerIcon
@@ -58,8 +61,8 @@ import com.gemini.assistant.presentation.composables.SearchRequestImageLazyRow
 import com.gemini.assistant.presentation.composables.SearchResponseSection
 import com.gemini.assistant.presentation.composables.SearchTextField
 import com.gemini.assistant.presentation.composables.WelcomeWidget
-import com.gemini.assistant.presentation.events.GeminiChatSearchEvent
 import com.gemini.assistant.presentation.events.GeminiSearchEvent
+import com.gemini.assistant.presentation.events.SearchRequestModelCleaner
 import com.gemini.assistant.presentation.states.GeminiSearchState
 import com.gemini.assistant.utils.Constants.EXTERNAL_STORAGE_PERMISSION
 import com.gemini.assistant.utils.Constants.MEDIA_IMAGES_PERMISSION
@@ -84,15 +87,17 @@ import com.gemini.assistant.utils.helpers.permission.isShouldShowRequestPermissi
 import com.gemini.assistant.utils.helpers.permission.sdkVersionHandler
 import com.gemini.assistant.utils.internet_connection.ConnectivityStatus
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
-@OptIn(FlowPreview::class)
+@OptIn(FlowPreview::class, ExperimentalMaterial3Api::class)
 @Composable
 fun GeminiSearchScreen(
     geminiSearchState: GeminiSearchState,
+    searchRequestModelCleaner: Flow<SearchRequestModelCleaner>,
     connectivityStatus: ConnectivityStatus,
     onGeminiSearchEvent: (GeminiSearchEvent) -> Unit,
     isShowScrollDownButton: Boolean
@@ -102,7 +107,9 @@ fun GeminiSearchScreen(
     val searchRequest = searchRequestModel.searchRequest
     val searchRequestImages = searchRequestModel.searchRequestImages
     val searchResponseModel = geminiSearchState.searchResponseModel
-    val expandedImage = geminiSearchState.expandedImage
+    val modalBottomSheetState = geminiSearchState.modalBottomSheetState
+    val isModalBottomSheetStateExpanded = modalBottomSheetState.isModalBottomSheetExpanded
+    val expandedImage = modalBottomSheetState.expandedImage
     val visiblePermissionDialogQueue = geminiSearchState.visiblePermissionDialogQueue
 
     var isSearchTextFieldFocused by rememberSaveable {
@@ -118,6 +125,8 @@ fun GeminiSearchScreen(
     val coroutineScope = rememberCoroutineScope()
 
     val scrollState = rememberScrollState()
+
+    val sheetState = rememberModalBottomSheetState()
 
     val context = LocalContext.current
 
@@ -142,9 +151,14 @@ fun GeminiSearchScreen(
             .debounce(_300L)
             .flowWithLifecycle(lifecycle)
             .collectLatest { canScrollForward ->
-                if (canScrollForward) onGeminiSearchEvent(GeminiSearchEvent.IsShowScrollDownButtonUpdate(true))
-                else onGeminiSearchEvent(GeminiSearchEvent.IsShowScrollDownButtonUpdate(false))
+                onGeminiSearchEvent(GeminiSearchEvent.IsShowScrollDownButtonUpdate(canScrollForward))
             }
+    }
+
+    LaunchedEffect(key1 = searchRequestModelCleaner) {
+        searchRequestModelCleaner.collect {
+            onGeminiSearchEvent(GeminiSearchEvent.OnUpdateSearchRequestModel)
+        }
     }
 
     val galleryPickerLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.PickMultipleVisualMedia()) { uris ->
@@ -194,6 +208,16 @@ fun GeminiSearchScreen(
             )
         }
 
+    if (isModalBottomSheetStateExpanded && expandedImage != null) {
+        CustomModalBottomSheet(
+            sheetState = sheetState,
+            image = expandedImage,
+            onDismiss = {
+                onGeminiSearchEvent(GeminiSearchEvent.OnSearchRequestImageContract)
+            }
+        )
+    }
+
     Column(
         modifier = deviceSize
             .background(MaterialTheme.colorScheme.background),
@@ -206,8 +230,7 @@ fun GeminiSearchScreen(
                     start = dimensionResource(id = R.dimen._10dp),
                     end = dimensionResource(id = R.dimen._10dp),
                     bottom = dimensionResource(id = R.dimen._10dp)
-                )
-                .verticalScroll(scrollState),
+                ),
             floatingActionButton = {
                 AnimatedVisibility(
                     visible = isShowScrollDownButton,
@@ -237,6 +260,7 @@ fun GeminiSearchScreen(
                 modifier = Modifier
                     .padding(paddingValues)
                     .fillMaxSize()
+                    .verticalScroll(scrollState)
             ) {
                 AnimatedContent(
                     targetState = searchResponseModel,
@@ -259,14 +283,16 @@ fun GeminiSearchScreen(
                         is GeminiResult.Loading -> LoadingSection(
                             modifier = deviceSize
                         )
-                        is GeminiResult.Success -> SearchResponseSection(
-                            modifier = deviceSize,
-                            searchResponseModel = geminiResponse.data ?: SearchResponseModel(),
-                            onTextCopied = { copiedText ->
-                                val annotatedString = AnnotatedString(text = copiedText)
-                                clipboardManager.setText(annotatedString)
-                            }
-                        )
+                        is GeminiResult.Success -> {
+                            SearchResponseSection(
+                                modifier = deviceSize.padding(dimensionResource(id = R.dimen._5dp)),
+                                searchResponseModel = geminiResponse.data ?: SearchResponseModel(),
+                                onTextCopied = { copiedText ->
+                                    val annotatedString = AnnotatedString(text = copiedText)
+                                    clipboardManager.setText(annotatedString)
+                                }
+                            )
+                        }
                         is GeminiResult.Undefined -> WelcomeWidget(
                             modifier = deviceSize,
                             imageVector = Icons.Default.QuestionMark,
@@ -349,6 +375,7 @@ fun GeminiSearchScreen(
                     )
                 )
                 ImagePickerIcon(
+                    modifier = Modifier.padding(start = dimensionResource(id = R.dimen._10dp)),
                     isIconEnabled = !isLoading,
                     onIconClick = {
                         sdkVersionHandler(
